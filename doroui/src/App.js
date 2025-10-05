@@ -1,15 +1,22 @@
 import './App.css';
+
 import AuthPage from './AuthPage';
 import Draw from './Draw';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutUser, loginUser } from './slices/SsoSlice' ;
 
 function App() {
 
-  const [user, setUser] = useState() ;
+  // const [user, setUser] = useState() ;
+  const ssoDispatch = useDispatch() ;
+  const currentUser = useSelector((state) => state.sso.user) ;
+  const currentToken = useSelector((state) => state.sso.jsonWebToken) ;
+  const currentIsLoggedIn = useSelector((state) => state.sso.isLoggedIn) ;
 
   useEffect(() => {
     console.log('App - useEffect') ;
-    console.log(localStorage.getItem("user")) ;
+    // console.log(localStorage.getItem("user")) ;
     if(localStorage.getItem("user") && localStorage.getItem("jsonWebToken")) { 
       console.log('App useEffect : ', localStorage.getItem("user"), localStorage.getItem("jsonWebToken")) ;
       fetch(`http://localhost:8080/isLoggedIn/`, 
@@ -22,12 +29,13 @@ function App() {
       )
       .then(response => {
           if(!response.ok) {
-            console.log('App - useEffect - Not logged in') ;
+            console.log('App - useEffect - Login expired.') ;
             console.log(response) ;
             handleLogout() ;
           }
           else {
-            setUser(localStorage.getItem("user")) ;
+            // setUser(localStorage.getItem("user")) ;
+            ssoDispatch(loginUser({user:localStorage.getItem("user"), jsonWebToken:localStorage.getItem("jsonWebToken")})) ;
           }
           
         }
@@ -36,22 +44,25 @@ function App() {
   }, []) ;
 
   const handleAuth = (loggedinUser) => {
-    setUser(loggedinUser.user) ;
-    localStorage.setItem("user", loggedinUser.user)
-    localStorage.setItem("jsonWebToken", loggedinUser.jsonWebToken)
+    localStorage.setItem("user", loggedinUser.user) ;
+    localStorage.setItem("jsonWebToken", loggedinUser.jsonWebToken) ;
+    // setUser(loggedinUser.user) ;
+    ssoDispatch(loginUser({user:loggedinUser.user, jsonWebToken:loggedinUser.jsonWebToken})) ;
   } ;
 
   const handleLogout = () => {
     localStorage.removeItem("user") ;
-    localStorage.removeItem("jsonWebToken") ;
-    setUser() ;
+    localStorage.removeItem("jsonWebToken") ;    
+    // setUser() ;
+    ssoDispatch(logoutUser()) ;
   } ;
 
   return (
     <div className="App">
       <button onClick={()=>handleLogout()}>LOGOUT</button>
       {
-        user ? (<Draw />)
+        // user ? (<Draw />)
+        currentIsLoggedIn ? (<Draw />)
         : (<AuthPage onAuth={handleAuth} />) 
       }
     </div>
