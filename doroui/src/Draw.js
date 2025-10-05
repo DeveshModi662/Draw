@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react" ;
+import React, {useState, useRef, useEffect, useLayoutEffect} from "react" ;
 import rough from 'roughjs' ;
 
 const generator = rough.generator() ;
@@ -32,6 +32,7 @@ function Draw() {
 
   const noOfUseEffect = useRef(0) ;
 
+  // Initializing the canvas
   useEffect(() => {
       const canvas = canvasRef.current ;
       const ctx = canvas.getContext("2d") ;
@@ -41,6 +42,7 @@ function Draw() {
     , []
   ) ;
 
+  // Re-paint the canvas
   useEffect( () => {
       // noOfUseEffect.current++ ;
       // console.log('useEffect', noOfUseEffect.current) ;
@@ -49,6 +51,7 @@ function Draw() {
       // const ctx = canvas.getContext("2d");
       // const roughCanvas = rough.canvas(canvas) ;
 
+      ctxRef.current = canvasRef.current.getContext("2d") ;
       ctxRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height) ;
       // ctx.clearRect(0, 0, 1000, 1000) ;
 
@@ -81,7 +84,8 @@ function Draw() {
       setElements((prevState) => [...prevState, newElementGen]) ;
     }
     else {
-
+      ctxRef.current.beginPath() ;
+      ctxRef.current.moveTo(clientX, clientY) ;
     }
     // console.log('Mousedown ', newElementGen) ;
     
@@ -92,17 +96,27 @@ function Draw() {
     // noOfUseEffect.current++ ;
     // console.log('mouseDownHandlerOnCanvas', noOfUseEffect.current) ;
     const {clientX, clientY} = event ;
-    // console.log('mouseMoveHandlerOnCanvas',clientX, clientY) ;
-    const index = elements.length - 1 ;
-    const {x1, y1} = elements[index] ;
-    const updatedElementGen = getGenerator(x1, y1, clientX, clientY, elementType) ;
-    const elementsCopy = [...elements] ;
-    elementsCopy[index] = updatedElementGen ;
-    console.log('mouseMoveHandlerOnCanvas', elements.length) ;
-    setElements(elementsCopy) ;
+    if(elementType != 'freehand') {
+      // console.log('mouseMoveHandlerOnCanvas',clientX, clientY) ;
+      const index = elements.length - 1 ;
+      const {x1, y1} = elements[index] ;
+      const updatedElementGen = getGenerator(x1, y1, clientX, clientY, elementType) ;
+      const elementsCopy = [...elements] ;
+      elementsCopy[index] = updatedElementGen ;
+      console.log('mouseMoveHandlerOnCanvas', elements.length) ;
+      setElements(elementsCopy) ;
+    }
+    else {
+      ctxRef.current.lineTo(clientX, clientY) ;
+      ctxRef.current.stroke() ;
+    }
   } ;
 
   const mouseUpHandlerOnCanvas = () => {
+    if(elementType === 'freehand') {
+      ctxRef.current.closePath() ;
+      
+    }
     setIsDrawing(false) ;
   } ;
 
