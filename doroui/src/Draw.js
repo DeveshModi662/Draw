@@ -2,21 +2,24 @@ import React, {useState, useRef, useEffect, useLayoutEffect} from "react" ;
 import rough from 'roughjs' ;
 
 const generator = rough.generator() ;
-function getGenerator(x1, y1, x2, y2, type) {
+function getGenerator(eleId, x1, y1, x2, y2, type) {
   if(type === 'line') {
-    return getLineGenerator(x1, y1, x2, y2) ;
+    return getLineGenerator(eleId, x1, y1, x2, y2) ;
   }
   if(type === 'rectangle') {
-    return getRectangleGenerator(x1, y1, x2, y2) ;
+    return getRectangleGenerator(eleId, x1, y1, x2, y2) ;
+  }
+  if(type === 'freehand') {
+    return getLineGenerator(eleId, x1, y1, x2, y2) ;
   }
 }
-function getLineGenerator(x1, y1, x2, y2) {
+function getLineGenerator(eleId, x1, y1, x2, y2) {
   const elementGenerator = generator.line(x1, y1, x2, y2) ;
   return {x1, y1, x2, y2, elementGenerator} ;
 } ;
-function getRectangleGenerator(x1, y1, x2, y2) {
+function getRectangleGenerator(eleId, x1, y1, x2, y2) {
   const elementGenerator = generator.rectangle(x1, y1, x2-x1, y2-y1) ;
-  return {x1, y1, x2, y2, elementGenerator} ;
+  return {eleId, x1, y1, x2, y2, elementGenerator} ;
 } ;
 
 
@@ -31,6 +34,9 @@ function Draw() {
   const [elementType, setElementType] = useState('line') ;
 
   const noOfUseEffect = useRef(0) ;
+  const eleCount = useRef(0) ;
+
+  const freehandPoints = [] ;
 
   // Initializing the canvas
   useEffect(() => {
@@ -44,7 +50,7 @@ function Draw() {
 
   // Re-paint the canvas
   useEffect( () => {
-      // noOfUseEffect.current++ ;
+      noOfUseEffect.current++ ;
       // console.log('useEffect', noOfUseEffect.current) ;
 
       // const canvas = document.getElementById("canvas");
@@ -75,18 +81,19 @@ function Draw() {
   ) ;
 
   const mouseDownHandlerOnCanvas = (event) => {
-    noOfUseEffect.current++ ;
+    // noOfUseEffect.current++ ;
     // console.log('mouseDownHandlerOnCanvas', noOfUseEffect.current) ;
     setIsDrawing(true) ;
+    eleCount.current++ ;    
     const {clientX, clientY} = event ;
-    if(elementType != 'freehand') {
-      const newElementGen = getGenerator(clientX, clientY, clientX, clientY, elementType) ;
+    // if(elementType != 'freehand') {
+      const newElementGen = getGenerator(eleCount.current, clientX, clientY, clientX, clientY, elementType) ;
       setElements((prevState) => [...prevState, newElementGen]) ;
-    }
-    else {
-      ctxRef.current.beginPath() ;
-      ctxRef.current.moveTo(clientX, clientY) ;
-    }
+    // }
+    // else {
+    //   ctxRef.current.beginPath() ;
+    //   ctxRef.current.moveTo(clientX, clientY) ;
+    // }
     // console.log('Mousedown ', newElementGen) ;
     
   } ;
@@ -96,19 +103,23 @@ function Draw() {
     // noOfUseEffect.current++ ;
     // console.log('mouseDownHandlerOnCanvas', noOfUseEffect.current) ;
     const {clientX, clientY} = event ;
+    const index = elements.length - 1 ;
+    const {eleId, x1, y1, x2, y2} = elements[index] ;
     if(elementType != 'freehand') {
       // console.log('mouseMoveHandlerOnCanvas',clientX, clientY) ;
-      const index = elements.length - 1 ;
-      const {x1, y1} = elements[index] ;
-      const updatedElementGen = getGenerator(x1, y1, clientX, clientY, elementType) ;
+      const updatedElementGen = getGenerator(eleId, x1, y1, clientX, clientY, elementType) ;
       const elementsCopy = [...elements] ;
       elementsCopy[index] = updatedElementGen ;
       console.log('mouseMoveHandlerOnCanvas', elements.length) ;
       setElements(elementsCopy) ;
     }
     else {
-      ctxRef.current.lineTo(clientX, clientY) ;
-      ctxRef.current.stroke() ;
+      // freehandPoints.push() ;
+      const newFreehandPoint = getGenerator(eleId, x2, y2, clientX, clientY, elementType) ;
+      console.log('mouseMove', index, x2, y2, clientX, clientY, elements[index]) ;
+      setElements((prevState) => [...prevState, newFreehandPoint]) ;
+      // ctxRef.current.lineTo(clientX, clientY) ;
+      // ctxRef.current.stroke() ;
     }
   } ;
 
