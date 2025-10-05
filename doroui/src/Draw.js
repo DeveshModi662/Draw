@@ -44,6 +44,7 @@ function Draw() {
       const ctx = canvas.getContext("2d") ;
       ctxRef.current = ctx ;
       roughCanvasRef.current = rough.canvas(canvas) ;
+      console.log(ctxRef.current) ;
     }
     , []
   ) ;
@@ -51,7 +52,7 @@ function Draw() {
   // Re-paint the canvas
   useEffect( () => {
       noOfUseEffect.current++ ;
-      // console.log('useEffect', noOfUseEffect.current) ;
+      console.log('useEffect', noOfUseEffect.current) ;
 
       // const canvas = document.getElementById("canvas");
       // const ctx = canvas.getContext("2d");
@@ -116,7 +117,7 @@ function Draw() {
     else {
       // freehandPoints.push() ;
       const newFreehandPoint = getGenerator(eleId, x2, y2, clientX, clientY, elementType) ;
-      console.log('mouseMove', index, x2, y2, clientX, clientY, elements[index]) ;
+      // console.log('mouseMove', index, x2, y2, clientX, clientY, elements[index]) ;
       setElements((prevState) => [...prevState, newFreehandPoint]) ;
       // ctxRef.current.lineTo(clientX, clientY) ;
       // ctxRef.current.stroke() ;
