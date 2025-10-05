@@ -22,22 +22,37 @@ function getRectangleGenerator(x1, y1, x2, y2) {
 
 function Draw() {
 
+  const canvasRef = useRef() ;
+  const ctxRef = useRef() ;
+  const roughCanvasRef = useRef() ;
+
   const [isDrawing, setIsDrawing] = useState(false) ;
   const [elements, setElements] = useState([]);
   const [elementType, setElementType] = useState('line') ;
 
   const noOfUseEffect = useRef(0) ;
 
+  useEffect(() => {
+      const canvas = canvasRef.current ;
+      const ctx = canvas.getContext("2d") ;
+      ctxRef.current = ctx ;
+      roughCanvasRef.current = rough.canvas(canvas) ;
+    }
+    , []
+  ) ;
+
   useEffect( () => {
       // noOfUseEffect.current++ ;
       // console.log('useEffect', noOfUseEffect.current) ;
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height) ;
+      // const canvas = document.getElementById("canvas");
+      // const ctx = canvas.getContext("2d");
+      // const roughCanvas = rough.canvas(canvas) ;
+
+      ctxRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height) ;
       // ctx.clearRect(0, 0, 1000, 1000) ;
 
-      const roughCanvas = rough.canvas(canvas) ;
+      
       // const rect = generator.rectangle(10, 10, 100, 100) ;
       // const line = generator.line(10, 10, 110, 110) ;
 
@@ -49,7 +64,7 @@ function Draw() {
       // console.log(elements) ;
       elements.forEach(({elementGenerator}) => {
           // console.log('itr ' + lineGenerator) ;
-          roughCanvas.draw(elementGenerator) ;
+          roughCanvasRef.current.draw(elementGenerator) ;
         }
       ) ;      
     }
@@ -61,9 +76,15 @@ function Draw() {
     // console.log('mouseDownHandlerOnCanvas', noOfUseEffect.current) ;
     setIsDrawing(true) ;
     const {clientX, clientY} = event ;
-    const newElementGen = getGenerator(clientX, clientY, clientX, clientY, elementType) ;
+    if(elementType != 'freehand') {
+      const newElementGen = getGenerator(clientX, clientY, clientX, clientY, elementType) ;
+      setElements((prevState) => [...prevState, newElementGen]) ;
+    }
+    else {
+
+    }
     // console.log('Mousedown ', newElementGen) ;
-    setElements((prevState) => [...prevState, newElementGen]) ;
+    
   } ;
 
   const mouseMoveHandlerOnCanvas = (event) => {
@@ -102,9 +123,17 @@ function Draw() {
           onChange={() => setElementType("rectangle")}
         />
         <label htmlFor='rectangle'>Rectangle</label>
+        <input 
+          type = 'radio'
+          id = 'freehand'
+          checked={elementType === 'freehand'}
+          onChange={() => setElementType("freehand")}
+        />
+        <label htmlFor='freehand'>Free hand</label>
         <button onClick={() => {setElements([])}}>Clear</button>
       </div>
       <canvas id = "canvas"  
+        ref = {canvasRef}
         style={{backgroundColor:'yellow'}} 
         width={window.innerWidth}
         height={window.innerHeight}       
