@@ -4,6 +4,8 @@ import AuthPage from './AuthPage';
 import Draw from './Draw';
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser, loginUser } from './slices/SsoSlice' ;
+import { Routes, Route, Navigate } from "react-router-dom";
+import MyCanvas from './MyCanvas' ;
 
 function App() {
 
@@ -58,12 +60,31 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={()=>handleLogout()}>LOGOUT</button>
+      {!currentIsLoggedIn && <AuthPage onAuth={handleAuth} />}  
+      {currentIsLoggedIn && 
+        <div>
+          <button onClick={()=>handleLogout()}>LOGOUT</button>
+          <Routes>
+            <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = "/canvas" replace/>) : (<AuthPage onAuth={handleAuth} />) } />
+            <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
+            <Route path = "/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
+            <Route path = "*" element = {<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      }  
+      {/* {currentIsLoggedIn && <button onClick={()=>handleLogout()}>LOGOUT</button>}      
+      <Routes>
+        <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = "/canvas" replace/>) : (<AuthPage onAuth={handleAuth} />) } />
+        <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
+        <Route path = "/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
+        <Route path = "*" element = {<Navigate to="/" replace />} />
+      </Routes> */}
+      {/* <button onClick={()=>handleLogout()}>LOGOUT</button>
       {
         // user ? (<Draw />)
         currentIsLoggedIn ? (<Draw />)
         : (<AuthPage onAuth={handleAuth} />) 
-      }
+      } */}
     </div>
   );
 }
