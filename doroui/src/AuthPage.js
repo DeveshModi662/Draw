@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AUTH_URL = 'http://localhost:8080/login' ;
+const AUTH_URL = 'http://localhost:8000/login' ;
 
 export default function AuthPage({ onAuth }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -24,11 +24,11 @@ export default function AuthPage({ onAuth }) {
       .then(response => response.json())
       .then(response => {
         console.log(response) ;
-        // const token = response.token ;
+        // const token = response.jsonWebToken ;
         // localStorage.setItem('user', formData.email) ;
-        // localStorage.setItem('jsonWebToken', response.token) ;
+        // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
         // setIsLogin(true) ;
-        onAuth({ 'user': formData.email,  'jsonWebToken': response.token});
+        onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
       }
     ) ;
     // onAuth({ email: formData.email }); // Pass fake user up
