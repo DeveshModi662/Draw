@@ -20,7 +20,7 @@ function App() {
     // console.log(localStorage.getItem("user")) ;
     if(localStorage.getItem("user") && localStorage.getItem("jsonWebToken")) { 
       console.log('App useEffect : ', localStorage.getItem("user"), localStorage.getItem("jsonWebToken")) ;
-      fetch(`http://localhost:8080/isLoggedIn/`, 
+      fetch(`http://localhost:8000/isLoggedIn`, 
         {
           method : 'GET',
           headers : {
@@ -31,7 +31,7 @@ function App() {
       .then(response => {
           if(!response.ok) {
             console.log('App - useEffect - Login expired.') ;
-            console.log(response) ;
+            console.log('dk-isLoggedIn-notOk-',response) ;
             handleLogout() ;
           }
           else {
@@ -45,13 +45,20 @@ function App() {
   }, []) ;
 
   const handleAuth = (loggedinUser) => {
-    localStorage.setItem("user", loggedinUser.user) ;
-    localStorage.setItem("jsonWebToken", loggedinUser.jsonWebToken) ;
-    // setUser(loggedinUser.user) ;
+    console.log('dk-App-handleAuth-', loggedinUser) ;
+    try {
+      localStorage.setItem("user", loggedinUser.user);
+      localStorage.setItem("jsonWebToken", loggedinUser.jsonWebToken);
+      console.log('Stored in localStorage:', localStorage.getItem("user"), localStorage.getItem("jsonWebToken"));
+    } catch (e) {
+      console.error('Error writing to localStorage', e);
+    }
+  //   // setUser(loggedinUser.user) ;
     ssoDispatch(loginUser({user:loggedinUser.user, jsonWebToken:loggedinUser.jsonWebToken})) ;
   } ;
 
   const handleLogout = () => {
+    console.log('dk-App-handleLogout') ;
     localStorage.removeItem("user") ;
     localStorage.removeItem("jsonWebToken") ;    
     // setUser() ;
