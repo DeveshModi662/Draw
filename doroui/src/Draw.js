@@ -2,24 +2,24 @@ import React, {useState, useRef, useEffect, useLayoutEffect} from "react" ;
 import rough from 'roughjs' ;
 
 const generator = rough.generator() ;
-function getGenerator(eleId, x1, y1, x2, y2, type) {
+function getGenerator(eleId, x1, y1, x2, y2, type, len) {
   if(type === 'line') {
-    return getLineGenerator(eleId, x1, y1, x2, y2) ;
+    return getLineGenerator(eleId, x1, y1, x2, y2,len) ;
   }
   if(type === 'rectangle') {
-    return getRectangleGenerator(eleId, x1, y1, x2, y2) ;
+    return getRectangleGenerator(eleId, x1, y1, x2, y2, len) ;
   }
   if(type === 'freehand') {
-    return getLineGenerator(eleId, x1, y1, x2, y2) ;
+    return getLineGenerator(eleId, x1, y1, x2, y2, len) ;
   }
 }
-function getLineGenerator(eleId, x1, y1, x2, y2) {
+function getLineGenerator(eleId, x1, y1, x2, y2, len) {
   const elementGenerator = generator.line(x1, y1, x2, y2) ;
-  return {x1, y1, x2, y2, elementGenerator} ;
+  return {eleId, x1, y1, x2, y2, elementGenerator, len} ;
 } ;
-function getRectangleGenerator(eleId, x1, y1, x2, y2) {
+function getRectangleGenerator(eleId, x1, y1, x2, y2, len) {
   const elementGenerator = generator.rectangle(x1, y1, x2-x1, y2-y1) ;
-  return {eleId, x1, y1, x2, y2, elementGenerator} ;
+  return {eleId, x1, y1, x2, y2, elementGenerator, len} ;
 } ;
 
 
@@ -44,7 +44,7 @@ function Draw() {
       const ctx = canvas.getContext("2d") ;
       ctxRef.current = ctx ;
       roughCanvasRef.current = rough.canvas(canvas) ;
-      console.log(ctxRef.current) ;
+      // console.log(ctxRef.current) ;
     }
     , []
   ) ;
@@ -52,7 +52,7 @@ function Draw() {
   // Re-paint the canvas
   useEffect( () => {
       noOfUseEffect.current++ ;
-      console.log('useEffect', noOfUseEffect.current) ;
+      // console.log('useEffect', noOfUseEffect.current) ;
 
       // const canvas = document.getElementById("canvas");
       // const ctx = canvas.getContext("2d");
@@ -88,7 +88,7 @@ function Draw() {
     eleCount.current++ ;    
     const {clientX, clientY} = event ;
     // if(elementType != 'freehand') {
-      const newElementGen = getGenerator(eleCount.current, clientX, clientY, clientX, clientY, elementType) ;
+      const newElementGen = getGenerator(eleCount.current, clientX, clientY, clientX, clientY, elementType, elements.length) ;
       setElements((prevState) => [...prevState, newElementGen]) ;
     // }
     // else {
@@ -108,7 +108,7 @@ function Draw() {
     const {eleId, x1, y1, x2, y2} = elements[index] ;
     if(elementType != 'freehand') {
       // console.log('mouseMoveHandlerOnCanvas',clientX, clientY) ;
-      const updatedElementGen = getGenerator(eleId, x1, y1, clientX, clientY, elementType) ;
+      const updatedElementGen = getGenerator(eleId, x1, y1, clientX, clientY, elementType, elements.length) ;
       const elementsCopy = [...elements] ;
       elementsCopy[index] = updatedElementGen ;
       console.log('mouseMoveHandlerOnCanvas', elements.length) ;
@@ -116,7 +116,7 @@ function Draw() {
     }
     else {
       // freehandPoints.push() ;
-      const newFreehandPoint = getGenerator(eleId, x2, y2, clientX, clientY, elementType) ;
+      const newFreehandPoint = getGenerator(eleId, x2, y2, clientX, clientY, elementType, elements.length) ;
       // console.log('mouseMove', index, x2, y2, clientX, clientY, elements[index]) ;
       setElements((prevState) => [...prevState, newFreehandPoint]) ;
       // ctxRef.current.lineTo(clientX, clientY) ;
@@ -132,8 +132,11 @@ function Draw() {
     setIsDrawing(false) ;
   } ;
 
+  const printElements = () => {console.log(elements) ;}
+
   return (
     <div className="App">
+      <button onClick={printElements}>Print elements</button>
       <div>
         <input 
           type = 'radio'
