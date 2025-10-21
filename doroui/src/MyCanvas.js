@@ -1,31 +1,3 @@
-// import React from "react";
-// import { useNavigate, useParams } from "react-router-dom";
-
-// export default function MyCanvas() {
-//   const navigate = useNavigate();
-//   const { username } = useParams();
-
-//   // This would later come from backend
-//   const canvasList = [
-//     { id: "c1", name: "My First Drawing" },
-//     { id: "c2", name: "Landscape Practice" },
-//   ];
-
-//   return (
-//     <div className="MyCanvas">Canvas-list
-//       <h2>{username}'s Canvases</h2>
-//       <ul>
-//         {canvasList.map((c) => (
-//           <li key={c.id}>
-//             <button onClick={() => navigate(`/draw/${c.id}`)}>{c.name}</button>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -79,7 +51,11 @@ function MyCanvas() {
 
   // Handle opening a specific canvas
   const handleOpenCanvas = (canvasId) => {
-    navigate(`/draw/${canvasId}`);
+    console.log('dk-handleOpenCanvas-canvasId', canvasId) ; 
+    console.log('dk-handleOpenCanvas-username', username) ; 
+    const newDrawTab = `/${username}/canvas/${canvasId}` ;
+    window.open(newDrawTab, "_blank", "noopener,noreferrer");
+    // navigate(newDrawTab);
   };
 
   // Handle deleting a canvas

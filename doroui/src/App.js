@@ -44,6 +44,9 @@ function App() {
         }
       ) ;      
     }
+    else {
+      handleLogout() ;
+    }
   }, []) ;
 
   const handleAuth = (loggedinUser) => {
@@ -72,14 +75,15 @@ function App() {
     <div className="App"> 
       {!currentIsLoggedIn && <AuthPage onAuth={handleAuth} />}  
       {/* {currentIsLoggedIn && !currentUser && <div>Loading...</div>} */}
-      {currentIsLoggedIn && 
+      { currentIsLoggedIn && 
         <div>
           <button onClick={()=>handleLogout()}>LOGOUT</button>           
             <Routes>
               <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = {`/${localStorage.getItem("user")}/canvas`} replace/>) : (<AuthPage onAuth={handleAuth} />) } />
-              <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
+              <Route path = "/drawopen" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
               <Route path = "/:currentUser/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
               <Route path = "*" element = {<Navigate to="/" replace />} />
+              <Route path="/:username/canvas/:canvasId" element={<Draw />} />
             </Routes>                       
         </div>
       }  
