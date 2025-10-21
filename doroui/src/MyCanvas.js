@@ -38,10 +38,17 @@ function MyCanvas() {
   // Handle creating a new canvas
   const handleCreateCanvas = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/canvas", {
-        username,
-        title: `New Canvas ${Date.now()}`
-      });
+      const token = localStorage.getItem("jsonWebToken");
+      const payLoad = {canvasName : 'User2Canvas11'}; 
+      const response = await axios.post(`http://localhost:8000/${username}/canvas`, 
+        payLoad, 
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+        console.log('dk-MyCanvas-handleCreateCanvas-postResponse-', response) ;
       setCanvases([...canvases, response.data]);
     } catch (err) {
       console.error("Error creating new canvas:", err);

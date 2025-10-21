@@ -1,5 +1,7 @@
 import React, {useState, useRef, useEffect, useLayoutEffect} from "react" ;
 import rough from 'roughjs' ;
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const generator = rough.generator() ;
 function getGenerator(eleId, x1, y1, x2, y2, type, len) {
@@ -15,15 +17,18 @@ function getGenerator(eleId, x1, y1, x2, y2, type, len) {
 }
 function getLineGenerator(eleId, x1, y1, x2, y2, len) {
   const elementGenerator = generator.line(x1, y1, x2, y2) ;
-  return {eleId, x1, y1, x2, y2, elementGenerator, len} ;
+  return {eleId, x1, y1, x2, y2, elementGenerator, len, saved:false} ;
 } ;
 function getRectangleGenerator(eleId, x1, y1, x2, y2, len) {
   const elementGenerator = generator.rectangle(x1, y1, x2-x1, y2-y1) ;
-  return {eleId, x1, y1, x2, y2, elementGenerator, len} ;
+  return {eleId, x1, y1, x2, y2, elementGenerator, len, saved:false} ;
 } ;
 
 
 function Draw() {
+
+  const { username : username } = useParams();
+  const { canvasId : canvasid } = useParams(); 
 
   const canvasRef = useRef() ;
   const ctxRef = useRef() ;
@@ -38,30 +43,33 @@ function Draw() {
 
   const freehandPoints = [] ;
 
+
+  useEffect(() => {
+      const fetchSaveDrawing = async () => {
+        console.log('dk-loadUseEffect-getCall') ;
+        const token = localStorage.getItem("jsonWebToken");
+        const response = await axios.get(`http://localhost:8000/${username}/canvas/${canvasid}/draw`, {
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+              }
+            });
+        console.log('dk-loadUseEffect-getCall-1-', eleCount.current) ;
+        setElements(response.data);
+        // eleCount.current = elements.length ;
+        console.log('dk-loadUseEffect-getCall-2-', eleCount.current) ;
+      }
+      fetchSaveDrawing() ;
+    }
+  , [username, canvasid]
+  ) ;
+
   // Initializing the canvas
   useEffect(() => {
       const canvas = canvasRef.current ;
       const ctx = canvas.getContext("2d") ;
       ctxRef.current = ctx ;
       roughCanvasRef.current = rough.canvas(canvas) ;
-      // console.log(ctxRef.current) ;
-      // fetch(AUTH_URL, {
-      //   method : 'GET'
-      //   , headers : {
-      //     'Content-Type' : 'application/json'
-      //   },
-      //   body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
-      // })
-      //   .then(response => response.json())
-      //   .then(response => {
-      //     console.log(response) ;
-      //     // const token = response.jsonWebToken ;
-      //     // localStorage.setItem('user', formData.email) ;
-      //     // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
-      //     // setIsLogin(true) ;
-      //     onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
-      //   }
-      // ) ;
     }
     , []
   ) ;
@@ -69,7 +77,7 @@ function Draw() {
   // Re-paint the canvas
   useEffect( () => {
       noOfUseEffect.current++ ;
-      // console.log('useEffect', noOfUseEffect.current) ;
+      console.log('useEffect', noOfUseEffect.current) ;
 
       // const canvas = document.getElementById("canvas");
       // const ctx = canvas.getContext("2d");
@@ -89,6 +97,8 @@ function Draw() {
       // Draw all the previous elements back on the canvas
       // console.log('useEffect', noOfUseEffect.current) ;
       // console.log(elements) ;
+
+      eleCount.current = Math.max(...elements.map(obj => obj.eleId)) ;
       elements.forEach(({elementGenerator}) => {
           // console.log('itr ' + lineGenerator) ;
           roughCanvasRef.current.draw(elementGenerator) ;
@@ -147,13 +157,46 @@ function Draw() {
       
     }
     setIsDrawing(false) ;
+    saveChanges() ;
   } ;
 
   const printElements = () => {console.log(elements) ;}
 
+  const saveChanges = async () => {
+    let delta = elements.filter(n => n.saved == false) ;
+    if (delta.length === 0) {
+      console.log("No new changes to save.");
+      return;
+    }
+    console.log('Saving new elements to DB...', delta.length);
+      console.log('dk-saveChanges-') ;
+      const token = localStorage.getItem("jsonWebToken");
+    const response = await axios.post(
+      `http://localhost:8000/${username}/canvas/${canvasid}/draw`,
+      delta, // ← Body (new elements)
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    console.log("Server response:", response.data);
+    const updatedElements = elements.map(el =>
+      delta.includes(el) ? { ...el, saved: true } : el
+    );
+
+    setElements(updatedElements);
+
+    console.log("All changes saved successfully.");
+
+  }
+
   return (
     <div className="App">
       <button onClick={printElements}>Print elements</button>
+      <button onClick={saveChanges}>SAVE</button>
       <div>
         <input 
           type = 'radio'

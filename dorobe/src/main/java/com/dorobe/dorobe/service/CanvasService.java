@@ -44,13 +44,14 @@ public class CanvasService {
     }
 
     @Transactional
-    public void createNewCanvas(Canvas newCanvas, String loggedInUsername) {
+    public Canvas createNewCanvas(Canvas newCanvas, String loggedInUsername) {
         if(!((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getUsername().equals(loggedInUsername)) {
             throw new RuntimeException("User not authorised") ;
-        }
+        }        
         User user = userRepo.findByUsername(loggedInUsername).get() ;
-        user.getUserCanvas().add(canvasRepo.save(newCanvas)) ;
+        user.getUserCanvas().add((newCanvas = canvasRepo.save(newCanvas))) ;
         userRepo.save(user) ;
+        return newCanvas ;
         // throw new UnsupportedOperationException("Unimplemented method 'createNewCanvas'");
     }
 
@@ -83,6 +84,28 @@ public class CanvasService {
         boolean b1 = drawRepo.findByCanvasId(canvasId).isPresent() ;
         List<CanvasElement> drawing = drawRepo.findByCanvasId(canvasId).get() ; // (List<CanvasElement>)
         return (drawRepo.findByCanvasId(canvasId).isPresent() ? (List<CanvasElement>)drawRepo.findByCanvasId(canvasId).get() : new ArrayList<CanvasElement>()) ;
+    }
+
+    public List<CanvasElement> updateDrawing(String loggedInUsername, ObjectId canvasId, List<CanvasElement> delta) {
+        System.out.println("CanvasService-updateDrawing-1");
+        if(!((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getUsername().equals(loggedInUsername)) {
+            throw new RuntimeException("User not authorised") ;
+        }
+        System.out.println("CanvasService-updateDrawing-2");
+        List<Canvas> userCanvas = userRepo.findByUsername(loggedInUsername).get().getUserCanvas() ;
+        Canvas canvas = canvasRepo.findById(canvasId).get() ;
+        boolean belongsToUser = userCanvas.stream().anyMatch(c -> c.getId().equals(canvas.getId()));
+        System.out.println("CanvasService-updateDrawing-3");
+        if(!belongsToUser) 
+            throw new RuntimeException("Canvas not found") ;
+        System.out.println("CanvasService-updateDrawing-4");            
+        for(CanvasElement canvasElement : delta) {
+            canvasElement.setCanvasId(canvasId);
+        }        
+        System.out.println("CanvasService-updateDrawing-5");
+        drawRepo.saveAll(delta) ;
+        System.out.println("CanvasService-updateDrawing-6");
+        return null ;
     }
 
 
