@@ -45,6 +45,23 @@ function Draw() {
       ctxRef.current = ctx ;
       roughCanvasRef.current = rough.canvas(canvas) ;
       // console.log(ctxRef.current) ;
+      fetch(AUTH_URL, {
+        method : 'GET'
+        , headers : {
+          'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
+      })
+        .then(response => response.json())
+        .then(response => {
+          console.log(response) ;
+          // const token = response.jsonWebToken ;
+          // localStorage.setItem('user', formData.email) ;
+          // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
+          // setIsLogin(true) ;
+          onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
+        }
+      ) ;
     }
     , []
   ) ;

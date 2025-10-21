@@ -19,7 +19,7 @@ public class SsoUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
-        System.out.println("dk-SsoService-loadByUsername-"+username);
+        System.out.println("dk-SsoUserDetailsService-loadByUsername-"+username);
         User user = userRepo.findByUsername(username).get() ;
         if(user == null) {
             System.out.println("dk-SsoService-loadByUsername-username not found");
