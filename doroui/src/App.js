@@ -66,17 +66,18 @@ function App() {
   } ;
 
   return (
-    <div className="App">
+    <div className="App"> 
       {!currentIsLoggedIn && <AuthPage onAuth={handleAuth} />}  
+      {/* {currentIsLoggedIn && !currentUser && <div>Loading...</div>} */}
       {currentIsLoggedIn && 
         <div>
-          <button onClick={()=>handleLogout()}>LOGOUT</button>
-          <Routes>
-            <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = {`/${localStorage.getItem("user")}/canvas`} replace/>) : (<AuthPage onAuth={handleAuth} />) } />
-            <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
-            <Route path = "/:currentUser/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
-            <Route path = "*" element = {<Navigate to="/" replace />} />
-          </Routes>
+          <button onClick={()=>handleLogout()}>LOGOUT</button>           
+            <Routes>
+              <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = {`/${localStorage.getItem("user")}/canvas`} replace/>) : (<AuthPage onAuth={handleAuth} />) } />
+              <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
+              <Route path = "/:currentUser/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
+              <Route path = "*" element = {<Navigate to="/" replace />} />
+            </Routes>                       
         </div>
       }  
       {/* {currentIsLoggedIn && <button onClick={()=>handleLogout()}>LOGOUT</button>}      
