@@ -1,18 +1,41 @@
 package com.dorobe.dorobe.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.mongodb.lang.NonNull;
 
 @Document(collection = "Users")
 public class User {
 
     @Id
-    private String id ;
+    private ObjectId id ;
+
+    @NonNull
+    @Indexed(unique = true)
     private String username ;
+
+    @NonNull
     private String password ;
+
     private String jsonWebToken ;    
+
+    @DBRef(lazy = true)  // Why ??
+    private List<Canvas> userCanvas = new ArrayList<>() ;
+
+    public List<Canvas> getUserCanvas() {
+        return userCanvas;
+    }
+    public void setUserCanvas(List<Canvas> userCanvas) {
+        this.userCanvas = userCanvas;
+    }
     public String getPassword() {
         return password;
     }
@@ -20,10 +43,10 @@ public class User {
         this.password = password;
     }
     private String[] roles ;
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
     public String getUsername() {
@@ -42,7 +65,7 @@ public class User {
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", roles=" + Arrays.toString(roles) + "]";
     }
-    public User(String id, String username, String[] roles) {
+    public User(ObjectId id, String username, String[] roles) {
         this.id = id;
         this.username = username;
         this.roles = roles;
