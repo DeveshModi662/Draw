@@ -72,9 +72,9 @@ function App() {
         <div>
           <button onClick={()=>handleLogout()}>LOGOUT</button>
           <Routes>
-            <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = "/canvas" replace/>) : (<AuthPage onAuth={handleAuth} />) } />
+            <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = {`/${localStorage.getItem("user")}/canvas`} replace/>) : (<AuthPage onAuth={handleAuth} />) } />
             <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
-            <Route path = "/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
+            <Route path = "/:currentUser/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
             <Route path = "*" element = {<Navigate to="/" replace />} />
           </Routes>
         </div>
