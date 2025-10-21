@@ -33,9 +33,8 @@ public class CanvasController {
     }
 
     @PostMapping("/{loggedInUsername}/canvas")
-    public String createNewCanvas(@RequestBody Canvas newCanvas, @PathVariable String loggedInUsername) {
-        canvasService.createNewCanvas(newCanvas, loggedInUsername) ;
-        return null ;
+    public Canvas createNewCanvas(@RequestBody Canvas newCanvas, @PathVariable String loggedInUsername) {        
+        return canvasService.createNewCanvas(newCanvas, loggedInUsername) ;
     }
     
     @DeleteExchange("/{loggedInUsername}/canvas/{canvasIdToDelete}")
@@ -46,6 +45,11 @@ public class CanvasController {
     @GetMapping("/{loggedInUsername}/canvas/{canvasId}/draw")
     public List<CanvasElement> getDrawing(@PathVariable String loggedInUsername, @PathVariable ObjectId canvasId) {        
         return canvasService.getDrawing(loggedInUsername, canvasId) ; 
+    }
+
+    @PostMapping("/{loggedInUsername}/canvas/{canvasId}/draw")
+    public List<CanvasElement> updateDrawing(@PathVariable String loggedInUsername, @PathVariable ObjectId canvasId,  @RequestBody List<CanvasElement> delta) {        
+        return canvasService.updateDrawing(loggedInUsername, canvasId, delta) ; 
     }
     
 
