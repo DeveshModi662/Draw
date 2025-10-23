@@ -6,12 +6,12 @@ import com.dorobe.dorobe.model.User;
 import com.dorobe.dorobe.repository.UserRepository;
 import com.dorobe.dorobe.service.SsoService;
 
-import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.csrf.CsrfToken;
+// import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,11 +26,11 @@ public class SsoController {
     @Autowired
     private SsoService ssoService ;
 
-    @GetMapping("/getCsrfToken")
-    public CsrfToken getCsrfToken(HttpServletRequest request) {
-        System.out.println("dk-SsoController-getCsrfToken()-"+request.getAttribute("_csrf"));
-        return (CsrfToken) request.getAttribute("_csrf") ;
-    }
+    // @GetMapping("/getCsrfToken")
+    // public CsrfToken getCsrfToken(HttpServletRequest request) {
+    //     System.out.println("dk-SsoController-getCsrfToken()-"+request.getAttribute("_csrf"));
+    //     return (CsrfToken) request.getAttribute("_csrf") ;
+    // }
 
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
@@ -44,12 +44,12 @@ public class SsoController {
     //     return userRepo.save(newUser) ;
     // }
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/signUp")
-    public User signUp(@RequestBody User newUser) {
-        System.out.println("dk-SsoController-signUp()");
-        return ssoService.register(newUser) ;
-    }
+    // @CrossOrigin(origins = "http://localhost:3000")
+    // @PostMapping("/signUp")
+    // public User signUp(@RequestBody User newUser) {
+    //     System.out.println("dk-SsoController-signUp()");
+    //     return ssoService.register(newUser) ;
+    // }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")

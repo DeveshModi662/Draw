@@ -37,12 +37,14 @@ public class SsoService {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             ) ;
         if(auth.isAuthenticated()) {
+            System.out.println("dk-SsoService-login-isAuthenticated") ; 
             user.setJsonWebToken(jwtService.generateToken(user.getUsername()));
             user.setPassword(null);
             return user ;
         }
         else {
-            return null ;
+            System.out.println("dk-SsoService-login-isNotAuthenticated") ;
+            throw new RuntimeException("Wrong username/password") ;
         }
     }
 

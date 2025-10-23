@@ -48,7 +48,7 @@ public class JwtService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + (60 * 60 * 1000)))
+                .expiration(new Date(System.currentTimeMillis() + (60 * 60 * 10000)))
                 .and()
                 .signWith(this.getKey())
                 .compact() ;
@@ -76,7 +76,7 @@ public class JwtService {
                         .build()
                         .parseSignedClaims(jwt)
                         .getPayload() ;
-        System.out.println("dk-JwtService-validateToken-"+userByUsername.getUsername()+"-"+claims.getSubject());
+        System.out.println("dk-JwtService-validateToken-"+userByUsername.getUsername()+"-"+claims.getSubject()+" before "+ claims.getExpiration());
         return (!claims.getExpiration().before(new Date()) && userByUsername != null && claims.getSubject().equals(userByUsername.getUsername())) ;
     }
 }
