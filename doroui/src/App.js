@@ -4,7 +4,7 @@ import AuthPage from './AuthPage';
 import Draw from './Draw';
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser, loginUser } from './slices/SsoSlice' ;
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import MyCanvas from './MyCanvas' ;
 
 function App() {
@@ -14,6 +14,8 @@ function App() {
   const currentUser = useSelector((state) => state.sso.user) ;
   const currentToken = useSelector((state) => state.sso.jsonWebToken) ;
   const currentIsLoggedIn = useSelector((state) => state.sso.isLoggedIn) ;
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('App - useEffect') ;
@@ -42,6 +44,9 @@ function App() {
         }
       ) ;      
     }
+    else {
+      handleLogout() ;
+    }
   }, []) ;
 
   const handleAuth = (loggedinUser) => {
@@ -60,23 +65,26 @@ function App() {
   const handleLogout = () => {
     console.log('dk-App-handleLogout') ;
     localStorage.removeItem("user") ;
-    localStorage.removeItem("jsonWebToken") ;    
+    localStorage.removeItem("jsonWebToken") ;        
     // setUser() ;
     ssoDispatch(logoutUser()) ;
+    navigate(`/`);
   } ;
 
   return (
-    <div className="App">
+    <div className="App"> 
       {!currentIsLoggedIn && <AuthPage onAuth={handleAuth} />}  
-      {currentIsLoggedIn && 
+      {/* {currentIsLoggedIn && !currentUser && <div>Loading...</div>} */}
+      { currentIsLoggedIn && 
         <div>
-          <button onClick={()=>handleLogout()}>LOGOUT</button>
-          <Routes>
-            <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = "/canvas" replace/>) : (<AuthPage onAuth={handleAuth} />) } />
-            <Route path = "/draw" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
-            <Route path = "/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
-            <Route path = "*" element = {<Navigate to="/" replace />} />
-          </Routes>
+          <button onClick={()=>handleLogout()}>LOGOUT</button>           
+            <Routes>
+              <Route path = "/" element = {currentIsLoggedIn ? (<Navigate to = {`/${localStorage.getItem("user")}/canvas`} replace/>) : (<AuthPage onAuth={handleAuth} />) } />
+              <Route path = "/drawopen" element = {currentIsLoggedIn ? (<Draw/>) : (<Navigate to="/" replace />) } />
+              <Route path = "/:currentUser/canvas" element = {currentIsLoggedIn ? (<MyCanvas />) : (<Navigate to="/" replace />) } />
+              <Route path = "*" element = {<Navigate to="/" replace />} />
+              <Route path="/:username/canvas/:canvasId" element={<Draw />} />
+            </Routes>                       
         </div>
       }  
       {/* {currentIsLoggedIn && <button onClick={()=>handleLogout()}>LOGOUT</button>}      
