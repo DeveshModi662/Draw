@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "com.dorobe.dorobe.DorobeApplication",
             "projectName": "dorobe",
-            "envFile": "/Users/dkmodi/Documents/IAmBack/Doro/PROD/Doro/.env"
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
