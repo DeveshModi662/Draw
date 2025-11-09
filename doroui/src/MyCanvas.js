@@ -15,8 +15,9 @@ function MyCanvas() {
     const fetchCanvases = async () => {
       try {
         const token = localStorage.getItem("jsonWebToken");
-        console.log('dk-username-beforeRest-',username) ;
-        const response = await axios.get(`http://localhost:8000/${username}/canvas`, {
+        console.log('dk-username-beforeRest-',username, `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`) ;
+        console.log(`${process.env.REACT_APP_BASE_API_URL}`) ;
+        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"
@@ -40,7 +41,7 @@ function MyCanvas() {
     try {
       const token = localStorage.getItem("jsonWebToken");
       const payLoad = {canvasName : 'User2Canvas11'}; 
-      const response = await axios.post(`http://localhost:8000/${username}/canvas`, 
+      const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, 
         payLoad, 
         {
           headers: {
@@ -69,7 +70,7 @@ function MyCanvas() {
   const handleDeleteCanvas = async (canvasId) => {
     if (!window.confirm("Are you sure you want to delete this canvas?")) return;
     try {
-      await axios.delete(`http://localhost:8000/${canvasId}/canvas`);
+      await axios.delete(`${process.env.BASE_API_URL}/${canvasId}/canvas`);
       setCanvases(canvases.filter((c) => c.id !== canvasId));
     } catch (err) {
       console.error("Error deleting canvas:", err);

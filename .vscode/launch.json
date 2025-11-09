@@ -15,7 +15,8 @@
             "name": "DorobeApplication",
             "request": "launch",
             "mainClass": "com.dorobe.dorobe.DorobeApplication",
-            "projectName": "dorobe"
+            "projectName": "dorobe",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
