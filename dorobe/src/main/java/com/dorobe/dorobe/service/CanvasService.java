@@ -108,5 +108,19 @@ public class CanvasService {
         return null ;
     }
 
-
+    public void clearDrawing(String loggedInUsername, ObjectId canvasId) {
+        System.out.println("CanvasService-clearDrawing-1");
+        if(!((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getUsername().equals(loggedInUsername)) {
+            throw new RuntimeException("User not authorised") ;
+        }
+        System.out.println("CanvasService-clearDrawing-2");
+        List<Canvas> userCanvas = userRepo.findByUsername(loggedInUsername).get().getUserCanvas() ;
+        Canvas canvas = canvasRepo.findById(canvasId).get() ;
+        boolean belongsToUser = userCanvas.stream().anyMatch(c -> c.getId().equals(canvas.getId()));
+        System.out.println("CanvasService-clearDrawing-3");
+        if(!belongsToUser) 
+            throw new RuntimeException("Canvas not found") ;
+        System.out.println("CanvasService-clearDrawing-4");  
+        drawRepo.deleteAllByCanvasId(canvasId) ;
+    }
 }

@@ -162,6 +162,20 @@ function Draw() {
 
   const printElements = () => {console.log(elements) ;}
 
+  const clearCanvas = async () => {
+    const token = localStorage.getItem("jsonWebToken");
+    const response = await axios.delete(
+      `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasid}/draw`,
+       // ← Body (new elements)
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );    
+  } ;
+
   const saveChanges = async () => {
     let delta = elements.filter(n => n.saved == false) ;
     if (delta.length === 0) {
@@ -219,7 +233,7 @@ function Draw() {
           onChange={() => setElementType("freehand")}
         />
         <label htmlFor='freehand'>Free hand</label>
-        <button onClick={() => {setElements([])}}>Clear</button>
+        <button onClick={() => {setElements([]) ; clearCanvas() ; }}>Clear</button>
       </div>
       <canvas id = "canvas"  
         ref = {canvasRef}
