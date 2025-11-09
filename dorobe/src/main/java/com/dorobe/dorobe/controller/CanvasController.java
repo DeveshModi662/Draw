@@ -51,6 +51,11 @@ public class CanvasController {
     public List<CanvasElement> updateDrawing(@PathVariable String loggedInUsername, @PathVariable ObjectId canvasId,  @RequestBody List<CanvasElement> delta) {        
         return canvasService.updateDrawing(loggedInUsername, canvasId, delta) ; 
     }
+
+    @DeleteMapping("/{loggedInUsername}/canvas/{canvasId}/draw")
+    public void clearDrawing(@PathVariable String loggedInUsername, @PathVariable ObjectId canvasId) {        
+        canvasService.clearDrawing(loggedInUsername, canvasId) ; 
+    }
     
 
 }
