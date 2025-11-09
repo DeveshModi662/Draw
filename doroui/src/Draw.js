@@ -48,7 +48,7 @@ function Draw() {
       const fetchSaveDrawing = async () => {
         console.log('dk-loadUseEffect-getCall') ;
         const token = localStorage.getItem("jsonWebToken");
-        const response = await axios.get(`http://localhost:8000/${username}/canvas/${canvasid}/draw`, {
+        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasid}/draw`, {
               headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -172,7 +172,7 @@ function Draw() {
       console.log('dk-saveChanges-') ;
       const token = localStorage.getItem("jsonWebToken");
     const response = await axios.post(
-      `http://localhost:8000/${username}/canvas/${canvasid}/draw`,
+      `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasid}/draw`,
       delta, // ← Body (new elements)
       {
         headers: {
