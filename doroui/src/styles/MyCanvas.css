@@ -1,0 +1,61 @@
+body {
+    padding: 20px;
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.createCanvasPopup {
+    padding: 10px 10px 10px 10px ;
+    visibility: hidden ;
+    border-radius: 1;
+    background-color: turquoise;
+    width: fit-content ;
+    height:fit-content ;
+    border-radius: 10px;
+    gap: 15px; 
+    height: 0 ;
+    width: 0;
+    /* opacity: 1; */
+    position:absolute ;
+    top: 0 ;
+    left:50% ;
+    transform: translate(-50%, -50%) ;
+    text-align: center;
+    padding : 15px ;
+    /* box-shadow: 0 8px 35px rgba(0, 0, 0, 0.25); */
+    transition : transform 1s, top 1s ;
+}
+
+.make-blur {
+    filter: blur(2px) ;
+    pointer-events: none;
+}
+
+
+.open-popup {
+    visibility: visible;
+    top: 50%;
+    /* transform: translate(-50%, -50%) scale(1); */
+    /* filter:blur(0); */
+}
+
+#newCanvasForm input { 
+    width: 400px;
+    padding: 10px;
+    border:20px ;
+    margin: 20px ;
+}
+
+#newCanvasForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.createCanvasContainer {
+    justify-content: center;
+}
