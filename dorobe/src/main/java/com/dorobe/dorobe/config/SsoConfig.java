@@ -40,7 +40,7 @@ public class SsoConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             .csrf(customizer -> customizer.disable()) 
             .authorizeHttpRequests(request -> request
-                .requestMatchers("signUp", "login", "isLoggedIn")
+                .requestMatchers("signUp", "login", "isLoggedIn", "sendOtp")
                 .permitAll()
                 .anyRequest()
                 .authenticated()            
