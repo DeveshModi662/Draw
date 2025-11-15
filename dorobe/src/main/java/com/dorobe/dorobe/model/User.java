@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,6 +31,15 @@ public class User {
 
     private String jsonWebToken ;    
 
+    @Transient
+    private String otp ;
+
+    public String getOtp() {
+        return otp;
+    }
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
     @DBRef(lazy = true)  // Why ??
     private List<Canvas> userCanvas = new ArrayList<>() ;
 
