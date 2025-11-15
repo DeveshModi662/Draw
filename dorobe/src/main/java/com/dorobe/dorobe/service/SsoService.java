@@ -23,11 +23,28 @@ public class SsoService {
     @Autowired
     private JwtService jwtService ;
 
+    @Autowired
+    private OtpService otpService ;
+
+    @Autowired
+    private EmailService emailService ;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12) ;
 
-    public User register(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        return userRepo.save(user) ;
+    public User register(User user) throws Exception {
+        System.out.println("dk-SsoService-register") ;
+        if(!otpService.verifyOtp(user.getUsername(), user.getOtp())) {
+            System.out.println("dk-SsoService-wrongOtp") ;
+            throw new Exception("Wrong OTP") ;}
+        if(!userRepo.findByUsername(user.getUsername()).isEmpty()) {
+            System.out.println("dk-SsoService-user already exists") ;
+            throw new Exception("Already exists.") ;
+        }
+        String pass = user.getPassword() ;
+        user.setPassword(encoder.encode(user.getPassword()));        
+        User savedUser = userRepo.save(user) ;
+        savedUser.setPassword(pass) ;
+        return this.login(savedUser) ;
     }
 
     public User login(User user) {
@@ -50,6 +67,11 @@ public class SsoService {
 
     public String isLoggedIn() {
         return "SsoActive" ;
+    }
+
+    public void sendOtp(User newUser) throws Exception {
+        System.out.println("dk-SsoService-sendOtp()");
+        emailService.sendOtp(newUser.getUsername());
     }
 
 }
