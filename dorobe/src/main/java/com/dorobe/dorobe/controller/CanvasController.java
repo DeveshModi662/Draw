@@ -37,7 +37,7 @@ public class CanvasController {
         return canvasService.createNewCanvas(newCanvas, loggedInUsername) ;
     }
     
-    @DeleteExchange("/{loggedInUsername}/canvas/{canvasIdToDelete}")
+    @DeleteMapping("/{loggedInUsername}/canvas/{canvasIdToDelete}")
     public void deleteCanvas(@PathVariable String loggedInUsername, @PathVariable ObjectId canvasIdToDelete) {
         canvasService.deleteCanvas(loggedInUsername, canvasIdToDelete) ;
     } 

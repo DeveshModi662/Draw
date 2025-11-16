@@ -6,6 +6,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ExportserviceApplication",
+            "request": "launch",
+            "mainClass": "com.exportservice.exportservice.ExportserviceApplication",
+            "projectName": "",
+            "envFile": "${workspaceFolder}/.envExport"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
