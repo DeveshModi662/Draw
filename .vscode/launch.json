@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "com.exportservice.exportservice.ExportserviceApplication",
             "projectName": "",
-            "envFile": "${workspaceFolder}/.envExport"
+            "envFile": "C:/Users/deves/OneDrive/Documents/IAmBack/PROD/Doro/.envExport"
         },
         {
             "type": "java",
