@@ -114,7 +114,7 @@ function MyCanvas() {
       <div className="blurOverlay">
         <h2>{username}’s Canvases</h2>
         <div className="createCanvasContainer">
-          <button onClick={newCanvasPopupOpen} style={{ marginBottom: "15px" }}>
+          <button onClick={newCanvasPopupOpen} style={{ marginBottom: "15px", borderRadius:"5px" }}>
             + Create New Canvas
           </button>
         </div>
@@ -122,7 +122,30 @@ function MyCanvas() {
         {canvases.length === 0 ? (
           <p>No canvases found.</p>
         ) : (
-          <ul style={{ listStyle: "none", padding: 0, width : 600 }}>
+        <div className="canvasGrid">
+          {
+            canvases.map((canvas) => (
+              <div className="canvasTile">
+                <div key={canvas.id}>
+                  <h4>{canvas.canvasName}</h4>
+                </div>                
+                <div style={{justifyContent:"center"}}>
+                  <button class="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
+                  style={{color: "darkgreen", width:"80%"}}
+                  >
+                    Open
+                  </button>
+                  <button class="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
+                  style={{color: "red", width:"80%"}}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </ div>
+              ) 
+            ) 
+          }
+          {/* <ul style={{ listStyle: "none", padding: 0, width : 600 }}>
             {canvases.map((canvas) => (
               <li
                 key={canvas.id}
@@ -136,7 +159,7 @@ function MyCanvas() {
                   alignItems: "center",
                 }}
               >
-                <div>
+                <div className="canvasTitle">
                   <strong>{canvas.canvasName}</strong>
                   <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
                     Created: {new Date(canvas.createdAt).toLocaleString()}
@@ -156,27 +179,27 @@ function MyCanvas() {
                 </div>
               </li>
             ))}
-          </ul>
+          </ul> */}
+        </div>
         )}
     </div>
       <div className="createCanvasPopup">
         <form id="newCanvasForm" onSubmit={handleCreateCanvas}>
-          <label>Canvas name</label>
+          <label><strong>Canvas name</strong></label>
           <input
-            // type="email"
             name="newCanvasName"
             placeholder="Name of new canvas"
-            className="w-full border p-2 rounded"
             required
           />
-          <label>Collaborators</label>
+          <label><strong>Collaborators</strong></label>
           <input
             name="collaborator"
             placeholder="Select collaborators"
-            className="w-full border p-2 rounded"
           />
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Submit</button>
-          <button type="cancel" onClick={newCanvasPopupClose} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Cancel</button>
+          <div style={{display:"flex", flexDirection:"row", width:"100%", alignItems:"center", justifyContent:"center"}}>
+            <button className="canvasActionBtn" type="submit" style={{marginRight:"10px"}}>Submit</button>
+            <button className="canvasActionBtn" type="cancel" onClick={newCanvasPopupClose}>Cancel</button>
+          </div>
         </form>
       </div>
     </div>
