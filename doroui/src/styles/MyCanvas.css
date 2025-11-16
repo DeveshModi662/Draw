@@ -1,0 +1,106 @@
+input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.createCanvasPopup {
+    padding: 10px 10px 10px 10px ;
+    visibility: hidden ;
+    border-radius: 1;
+    background-color: gray;
+    width: fit-content ;
+    height:fit-content ;
+    border-radius: 10px;
+    gap: 15px; 
+    height: 0 ;
+    width: 0;
+    /* opacity: 1; */
+    position:absolute ;
+    top: 0 ;
+    left:50% ;
+    transform: translate(-50%, -50%) ;
+    text-align: center;
+    padding : 15px ;
+    /* box-shadow: 0 8px 35px rgba(0, 0, 0, 0.25); */
+    transition : transform 1s, top 1s ;
+}
+
+.make-blur {
+    filter: blur(2px) ;
+    pointer-events: none;
+}
+
+
+.open-popup {
+    visibility: visible;
+    top: 50%;
+    /* transform: translate(-50%, -50%) scale(1); */
+    /* filter:blur(0); */
+}
+
+#newCanvasForm input { 
+    width: 400px;
+    padding: 10px;
+    border:20px ;
+    margin-bottom: 20px ;
+}
+
+#newCanvasForm {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.createCanvasContainer {
+    justify-content: center;
+}
+
+.canvasGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.canvasTile {
+  background: #978585;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  justify-content: center;
+}
+
+.canvasActionBtn {
+    /* margin-left: 20px; */
+    border-radius: 5px;
+    background-color:white ;
+    width:100px ;
+}
+
+.createCanvasPopup .canvasActionBtn {
+    /* height: calc(1%) ; */
+    flex: 0 45%;
+    width:70%;
+    min-height: 30px;
+}
+
+.canvasTile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.canvasTile img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
