@@ -125,17 +125,17 @@ function MyCanvas() {
         <div className="canvasGrid">
           {
             canvases.map((canvas) => (
-              <div className="canvasTile">
-                <div key={canvas.id}>
+              <div key={canvas.id} className="canvasTile">
+                <div >
                   <h4>{canvas.canvasName}</h4>
                 </div>                
                 <div style={{justifyContent:"center"}}>
-                  <button class="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
+                  <button className="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
                   style={{color: "darkgreen", width:"80%"}}
                   >
                     Open
                   </button>
-                  <button class="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
+                  <button className="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
                   style={{color: "red", width:"80%"}}
                   >
                     Delete
