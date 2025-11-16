@@ -1,0 +1,125 @@
+body {
+    padding: 0px 0px 0px 0px;
+    height:auto ;
+    /* overflow: hidden; */
+}
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  height: 100%;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  /* padding: 20px; */
+}
+
+.auth-card {
+  width: fit-content;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.auth-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 18px;
+  text-align: center;
+  color: #1a237e;
+}
+
+.auth-form {
+  justify-content: center;
+  width: fit-content;
+  row-gap: 50px;
+}
+
+.auth-input {
+  width: 90%;
+  border: 1px solid #b0bec5;
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+  transition: 0.2s;  
+  /* row-gap: 100px; */
+  margin-bottom: 20px;
+}
+
+.auth-input:focus {
+  border-color: #1e88e5;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.25);
+}
+
+.auth-button {
+  width: 95%;
+  background: #1e88e5;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.auth-button:hover {
+  background: #1565c0;
+}
+
+.auth-link {
+  color: #1e88e5;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.label-css {
+    text-align: left;
+}
+
+.otp-wrapper input {
+  width: 100px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  border: 1px solid #b0bec5;
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.small-button {
+    background-color: #b2d1ec;
+    border-radius: 5px;
+    margin-bottom: 5px ;
+}
+
+.small-button:hover {
+    background: #1565c0
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 
+label {
+  font-size: 14px;
+  color: #1e293b;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+} */
+
+
+
+input:focus {
+  border-color: #3b82f6;
+  background: #ffffff;
+  outline: none;
+}

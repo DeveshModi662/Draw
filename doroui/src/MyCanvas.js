@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import './styles/MyCanvas.css' ;
 
 function MyCanvas() {
   const { currentUser : username } = useParams(); // Extract username from URL
@@ -23,7 +24,6 @@ function MyCanvas() {
               "Content-Type": "application/json"
             }
           });
-
         setCanvases(response.data);
       } catch (err) {
         console.error("Error fetching canvases:", err);
@@ -37,10 +37,14 @@ function MyCanvas() {
   }, [username]);
 
   // Handle creating a new canvas
-  const handleCreateCanvas = async () => {
+  const handleCreateCanvas = async (e) => {
     try {
+      e.preventDefault() ;
+      console.log('handleCreateCanvas-'
+        ,  document.querySelector('input[name="newCanvasName"]').value) ;
       const token = localStorage.getItem("jsonWebToken");
-      const payLoad = {canvasName : 'User2Canvas11'}; 
+      const payLoad = {canvasName : document.querySelector('input[name="newCanvasName"]').value}; 
+      newCanvasPopupClose() ;
       const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, 
         payLoad, 
         {
@@ -56,6 +60,30 @@ function MyCanvas() {
       alert("Could not create new canvas");
     }
   };
+
+  
+  const newCanvasPopupOpen = () => {
+    document.getElementsByClassName("createCanvasPopup")[0].style.visibility = "visible" ;
+      document.getElementsByClassName("createCanvasPopup")[0].style.width = "fit-content" ;
+      document.getElementsByClassName("createCanvasPopup")[0].style.height = "fit-content" ;
+      document.getElementsByClassName("createCanvasPopup")[0].style.opacity = 1 ;
+      document.getElementsByClassName("createCanvasPopup")[0].classList.add("open-popup") ;
+      // document.body.classList.add("make-blur") ;
+      document.getElementsByClassName("blurOverlay")[0].classList.add("make-blur") ;
+      // document.body.style.filter = "blur(2px)" ;
+      // document.getElementsByClassName("createCanvasPopup")[0].style.display = "block" ;
+  } ;
+
+  const newCanvasPopupClose = () => {
+      document.getElementsByClassName("createCanvasPopup")[0].style.visibility = "hidden" ;
+      document.getElementsByClassName("createCanvasPopup")[0].style.width = 0 ;
+      document.getElementsByClassName("createCanvasPopup")[0].style.height = 0 ;      
+      document.getElementsByClassName("createCanvasPopup")[0].style.opacity = 0 ;
+      document.getElementsByClassName("createCanvasPopup")[0].classList.remove("open-popup") ;
+      // document.body.classList.remove("make-blur") ;
+      document.getElementsByClassName("blurOverlay")[0].classList.remove("make-blur") ;
+      // document.body.style.filter = "none" ;
+  }
 
   // Handle opening a specific canvas
   const handleOpenCanvas = (canvasId) => {
@@ -82,51 +110,98 @@ function MyCanvas() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>{username}’s Canvases</h2>
-      <button onClick={handleCreateCanvas} style={{ marginBottom: "15px" }}>
-        + Create New Canvas
-      </button>
+    <div>
+      <div className="blurOverlay">
+        <h2>{username}’s Canvases</h2>
+        <div className="createCanvasContainer">
+          <button onClick={newCanvasPopupOpen} style={{ marginBottom: "15px", borderRadius:"5px" }}>
+            + Create New Canvas
+          </button>
+        </div>
 
-      {canvases.length === 0 ? (
-        <p>No canvases found.</p>
-      ) : (
-        <ul style={{ listStyle: "none", padding: 0, width : 600 }}>
-          {canvases.map((canvas) => (
-            <li
-              key={canvas.id}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "10px",
-                padding: "10px",
-                marginBottom: "10px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <strong>{canvas.canvasName}</strong>
-                <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
-                  Created: {new Date(canvas.createdAt).toLocaleString()}
-                </p>
-                <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
-                  Id: {canvas.id}
-                </p>
-              </div>
-              <div>
-                <button onClick={() => handleOpenCanvas(canvas.id)}>Open</button>
-                <button
-                  onClick={() => handleDeleteCanvas(canvas.id)}
-                  style={{ marginLeft: "10px", color: "red" }}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+        {canvases.length === 0 ? (
+          <p>No canvases found.</p>
+        ) : (
+        <div className="canvasGrid">
+          {
+            canvases.map((canvas) => (
+              <div className="canvasTile">
+                <div key={canvas.id}>
+                  <h4>{canvas.canvasName}</h4>
+                </div>                
+                <div style={{justifyContent:"center"}}>
+                  <button class="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
+                  style={{color: "darkgreen", width:"80%"}}
+                  >
+                    Open
+                  </button>
+                  <button class="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
+                  style={{color: "red", width:"80%"}}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </ div>
+              ) 
+            ) 
+          }
+          {/* <ul style={{ listStyle: "none", padding: 0, width : 600 }}>
+            {canvases.map((canvas) => (
+              <li
+                key={canvas.id}
+                style={{
+                  border: "1px solid #ccc",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div className="canvasTitle">
+                  <strong>{canvas.canvasName}</strong>
+                  <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
+                    Created: {new Date(canvas.createdAt).toLocaleString()}
+                  </p>
+                  <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
+                    Id: {canvas.id}
+                  </p>
+                </div>
+                <div>
+                  <button onClick={() => handleOpenCanvas(canvas.id)}>Open</button>
+                  <button
+                    onClick={() => handleDeleteCanvas(canvas.id)}
+                    style={{ marginLeft: "10px", color: "red" }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul> */}
+        </div>
+        )}
+    </div>
+      <div className="createCanvasPopup">
+        <form id="newCanvasForm" onSubmit={handleCreateCanvas}>
+          <label><strong>Canvas name</strong></label>
+          <input
+            name="newCanvasName"
+            placeholder="Name of new canvas"
+            required
+          />
+          <label><strong>Collaborators</strong></label>
+          <input
+            name="collaborator"
+            placeholder="Select collaborators"
+          />
+          <div style={{display:"flex", flexDirection:"row", width:"100%", alignItems:"center", justifyContent:"center"}}>
+            <button className="canvasActionBtn" type="submit" style={{marginRight:"10px"}}>Submit</button>
+            <button className="canvasActionBtn" type="cancel" onClick={newCanvasPopupClose}>Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

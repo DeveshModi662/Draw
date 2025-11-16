@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./styles/AuthPage.css";
 
 const BASE_URL = `${process.env.REACT_APP_BASE_API_URL}` ;
 
@@ -58,63 +59,75 @@ export default function AuthPage({ onAuth }) {
   };
 
   const sendOtp = () => {
-     fetch(BASE_URL+"/sendOtp", {
-        method : 'POST'
-        , headers : {
-          'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
-      })
-      .then(setOtpSent(true)) ;
-
+    // document.getElementsByClassName("send-otp-button")[0].ariaDisabled = true ;
+    // document.getElementsByClassName("send-otp-button")[0].innerText = "Resend after 2 min" ;
+    // setTimeout(() => {
+    // document.getElementsByClassName("send-otp-button")[0].ariaDisabled = false ;
+    // document.getElementsByClassName("send-otp-button")[0].innerText = "Send OTP" ;
+    // }, 10*1000);
+    // if(!document.getElementsByClassName("send-otp-button")[0].ariaDisabled) {
+      fetch(BASE_URL+"/sendOtp", {
+          method : 'POST'
+          , headers : {
+            'Content-Type' : 'application/json'
+          },
+          body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
+        })
+        .then(setOtpSent(true)) ;
+    // }
   } ;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-96 bg-white p-6 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-4 text-center">
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">
           {isLogin ? "Login" : "Sign Up"}
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit}
+        className="auth-form">
+          <label className="label-css">@gmail email Id</label>
           <input
             // type="email"
             name="email"
             placeholder="Must use @gmail.com mail id"
             value={formData.email}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="auth-input"
             required
             autoComplete="current-password" 
           />
+          <label>Password</label>
           <input
             type="password"
             name="password"
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="auth-input"
             required
             autoComplete="current-password" 
           />
           {!isLogin ?
-            <div>
-              <input value={formData.otp} name="otp" placeholder="OTP" onChange={handleChange}/>
-              <button type="button" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700" onClick={() => sendOtp()}>Send Otp</button> 
+            <div className="otp-wrapper">
+              <input value={formData.otp} name="otp" placeholder="OTP" onChange={handleChange}
+              className="auth-input"/>
+              <button type="button"  
+                className="send-otp-button small-button" onClick={() => sendOtp()}>Send Otp</button> 
             </div>
             : null            
           }
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"            
+            className="auth-button"
           >
-            {isLogin ? "EnterLogin" : "EnterSignup"}
+            {isLogin ? "Login" : "Signup"}
           </button>
         </form>
 
         <p className="text-sm text-center mt-4">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
-            className="text-blue-600 underline"
+            className="small-button"
             onClick={() => setIsLogin(!isLogin)}
           >
             {isLogin ? "Sign Up" : "Login"}
