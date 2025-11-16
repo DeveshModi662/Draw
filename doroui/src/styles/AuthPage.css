@@ -1,7 +1,7 @@
 body {
     padding: 0px 0px 0px 0px;
     height:auto ;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .auth-container {
   display: flex;
