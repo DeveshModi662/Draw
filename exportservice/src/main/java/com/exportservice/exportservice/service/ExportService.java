@@ -28,6 +28,7 @@ public class ExportService {
     private CanvasElementRepository canvasElementRepo ; 
 
     private BufferedImage renderCanvas(List<CanvasElement> elements, int width, int height) { 
+        System.out.println("dk-processing");
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
@@ -53,6 +54,7 @@ public class ExportService {
         }
 
         g.dispose();
+        System.out.println("dk-done processing");
         return image;
     }
 
