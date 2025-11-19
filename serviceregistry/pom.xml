@@ -8,10 +8,10 @@
 		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.exportservice</groupId>
-	<artifactId>exportservice</artifactId>
+	<groupId>com.serviceregistry</groupId>
+	<artifactId>serviceregistry</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>exportservice</name>
+	<name>serviceregistry</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -40,28 +40,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-    	</dependency>
-		<!-- <dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>bson</artifactId>
-			<version>4.11.1</version>
-		</dependency> -->
 		
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 			<version>4.3.0</version>
 		</dependency>
-		 
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-			<version>4.3.0</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
