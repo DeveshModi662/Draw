@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import org.bson.types.ObjectId;
 
-@Document(collection = "CanvasElements")
+// @Document(collection = "CanvasElements")
 public class CanvasElement {
 
     @Id

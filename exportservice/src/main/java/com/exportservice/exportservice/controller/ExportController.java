@@ -20,7 +20,7 @@ public class ExportController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/{loggedInUsername}/canvas/{canvasId}")
-    public ResponseEntity<byte[]> printCanvas(@PathVariable String loggedInUsername, @PathVariable String canvasId) {        
+    public ResponseEntity<byte[]> printCanvas(@PathVariable String loggedInUsername, @PathVariable String canvasId) throws Exception {
         return exportService.printCanvas(loggedInUsername, canvasId) ;
     }
 }

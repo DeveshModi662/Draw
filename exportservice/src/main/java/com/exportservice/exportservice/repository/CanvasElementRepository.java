@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 // @Repository
-public interface CanvasElementRepository extends MongoRepository<CanvasElement, ObjectId> 
+public interface CanvasElementRepository 
+// extends MongoRepository<CanvasElement, ObjectId> 
 {
     Optional<List<CanvasElement>> findByCanvasId(ObjectId canvasId) ;
     void deleteAllByCanvasId(ObjectId canvasId) ;

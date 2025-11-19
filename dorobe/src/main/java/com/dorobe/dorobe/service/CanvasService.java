@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -122,5 +125,21 @@ public class CanvasService {
             throw new RuntimeException("Canvas not found") ;
         System.out.println("CanvasService-clearDrawing-4");  
         drawRepo.deleteAllByCanvasId(canvasId) ;
+    }
+
+    public ResponseEntity isCanvasOwnedByUser(String loggedInUsername, String canvasId) {   
+        System.out.println("dk-isCanvasOwnedByUser-1-"+loggedInUsername);     
+        if(!((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getUsername().equals(loggedInUsername)) {
+            System.out.println("dk-isCanvasOwnedByUser-2");
+            throw new RuntimeException("User not authorised") ;
+        }
+        System.out.println("dk-isCanvasOwnedByUser-3");
+        if(userRepo.findByUsername(loggedInUsername).get().getUserCanvas().stream().anyMatch(
+            canvas -> canvas.getId().toHexString().equals(canvasId))) {
+            System.out.println("dk-isCanvasOwnedByUser-4");
+            return ResponseEntity.ok().build(); 
+        }        
+        System.out.println("dk-isCanvasOwnedByUser-5");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
     }
 }

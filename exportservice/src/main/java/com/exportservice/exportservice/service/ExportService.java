@@ -12,7 +12,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import org.springframework.http.HttpHeaders;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,11 @@ import com.exportservice.exportservice.repository.CanvasElementRepository;
 @Service
 public class ExportService {
 
+    // @Autowired
+    // private CanvasElementRepository canvasElementRepo ; 
+
     @Autowired
-    private CanvasElementRepository canvasElementRepo ; 
+    DorobeService dorobeService ;
 
     private BufferedImage renderCanvas(List<CanvasElement> elements, int width, int height) { 
         System.out.println("dk-processing");
@@ -58,8 +62,18 @@ public class ExportService {
         return image;
     }
 
-    public ResponseEntity<byte[]> printCanvas(String loggedInUsername, String canvasId) {
-        List<CanvasElement> canvas = canvasElementRepo.findByCanvasId(new ObjectId(canvasId)).get() ;         
+    public ResponseEntity<byte[]> printCanvas(String loggedInUsername, String canvasId) throws Exception {
+        System.out.println("dk-Export service-1");
+        // List<CanvasElement> canvas = canvasElementRepo.findByCanvasId(new ObjectId(canvasId)).get() ;         
+        if(!dorobeService.isCanvasOwnedByUser(loggedInUsername, canvasId).getStatusCode().equals(HttpStatus.OK)) {
+            System.out.println("dk-Export service-1.5");
+            throw new Exception("Unauthorised") ;
+        }
+        System.out.println("dk-Export service-2");
+
+        List<CanvasElement> canvas = dorobeService.getDrawing(loggedInUsername, new ObjectId(canvasId)) ;
+        System.out.println("dk-Export service-3");
+
         BufferedImage img = this.renderCanvas(canvas, 1920, 800);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
