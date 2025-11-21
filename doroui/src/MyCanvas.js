@@ -16,9 +16,9 @@ function MyCanvas() {
     const fetchCanvases = async () => {
       try {
         const token = localStorage.getItem("jsonWebToken");
-        console.log('dk-username-beforeRest-',username, `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`) ;
-        console.log(`${process.env.REACT_APP_BASE_API_URL}`) ;
-        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, {
+        console.log('dk-username-beforeRest-',username, `${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`) ;
+        console.log(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}`) ;
+        const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"
@@ -45,7 +45,7 @@ function MyCanvas() {
       const token = localStorage.getItem("jsonWebToken");
       const payLoad = {canvasName : document.querySelector('input[name="newCanvasName"]').value}; 
       newCanvasPopupClose() ;
-      const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, 
+      const response = await axios.post(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, 
         payLoad, 
         {
           headers: {
@@ -97,8 +97,8 @@ function MyCanvas() {
   const handleCanvasExport = async (canvasId) => {
     try {
       const token = localStorage.getItem("jsonWebToken");
-      // window.open(`${process.env.REACT_APP_EXPORT_API_URL}/${username}/canvas/${canvasId}`, "_blank", "noopener,noreferrer");
-      axios.get(`${process.env.REACT_APP_EXPORT_API_URL}/${username}/canvas/${canvasId}`, {
+      // window.open(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_EXPORT_SERVICE}/${username}/canvas/${canvasId}`, "_blank", "noopener,noreferrer");
+      axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_EXPORT_SERVICE}/${username}/canvas/${canvasId}`, {
             responseType: "blob",
             headers: {
               "Authorization": `Bearer ${token}`,
@@ -131,7 +131,7 @@ function MyCanvas() {
     if (!window.confirm("Are you sure you want to delete this canvas?")) return;
     try {
       const token = localStorage.getItem("jsonWebToken");
-      await axios.delete(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasId}`, {
+      await axios.delete(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasId}`, {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"

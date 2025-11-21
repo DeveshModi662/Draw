@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./styles/AuthPage.css";
 
-const BASE_URL = `${process.env.REACT_APP_BASE_API_URL}` ;
+const BASE_URL = `${process.env.REACT_APP_GATEWAY_BASE}` ;
 
 export default function AuthPage({ onAuth }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,7 +17,7 @@ export default function AuthPage({ onAuth }) {
     // You can call your backend API here
     console.log(isLogin ? "Logging in..." : "Signing up...", formData);
     if(isLogin) {
-      fetch(BASE_URL+"/login", {
+      fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/login`, {
         method : 'POST'
         , headers : {
           'Content-Type' : 'application/json'
@@ -36,7 +36,7 @@ export default function AuthPage({ onAuth }) {
       ) ;
     }
     else {
-      fetch(BASE_URL+"/signUp", {
+      fetch(BASE_URL+`${process.env.REACT_APP_DOROBE_SERVICE}/signUp`, {
         method : 'POST'
         , headers : {
           'Content-Type' : 'application/json'
@@ -66,7 +66,7 @@ export default function AuthPage({ onAuth }) {
     // document.getElementsByClassName("send-otp-button")[0].innerText = "Send OTP" ;
     // }, 10*1000);
     // if(!document.getElementsByClassName("send-otp-button")[0].ariaDisabled) {
-      fetch(BASE_URL+"/sendOtp", {
+      fetch(BASE_URL+`${process.env.REACT_APP_DOROBE_SERVICE}/sendOtp`, {
           method : 'POST'
           , headers : {
             'Content-Type' : 'application/json'

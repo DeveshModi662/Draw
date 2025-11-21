@@ -44,28 +44,28 @@ public class SsoController {
     //     return userRepo.save(newUser) ;
     // }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/sendOtp")
     public void sendOtp(@RequestBody User newUser) throws Exception {
         System.out.println("dk-SsoController-sendOtp()");
         ssoService.sendOtp(newUser) ;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signUp")
     public User signUp(@RequestBody User newUser) throws Exception {
         System.out.println("dk-SsoController-signUp()");
         return ssoService.register(newUser) ;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
     public User login(@RequestBody User userPrincipal) {
         System.out.println("dk-SsoController-login()");
         return ssoService.login(userPrincipal) ;
     }  
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/isLoggedIn")
     public String isLoggedIn() {
         System.out.println("dk-SsoController-isLoggedIn()");
