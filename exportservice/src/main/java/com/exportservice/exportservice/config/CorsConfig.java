@@ -10,17 +10,17 @@ public class CorsConfig
 // implements WebMvcConfigurer 
 {
 
-    @Value("${cors.url1}")
-    private String corsUrl1 ;
+    // @Value("${cors.url1}")
+    // private String corsUrl1 ;
 
-    // @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry
-            .addMapping("/**")
-            .allowedOrigins(corsUrl1)
-            .allowedMethods("GET", "POST", "PUT", "DELETE")
-            .allowedHeaders("*")
-            .allowCredentials(true) 
-            ;
-    }
+    // // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     registry
+    //         .addMapping("/**")
+    //         .allowedOrigins(corsUrl1)
+    //         .allowedMethods("GET", "POST", "PUT", "DELETE")
+    //         .allowedHeaders("*")
+    //         .allowCredentials(true) 
+    //         ;
+    // }
 }
