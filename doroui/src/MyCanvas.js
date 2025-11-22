@@ -16,9 +16,9 @@ function MyCanvas() {
     const fetchCanvases = async () => {
       try {
         const token = localStorage.getItem("jsonWebToken");
-        console.log('dk-username-beforeRest-',username, `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`) ;
-        console.log(`${process.env.REACT_APP_BASE_API_URL}`) ;
-        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, {
+        console.log('dk-username-beforeRest-',username, `${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`) ;
+        console.log(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}`) ;
+        const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"
@@ -45,7 +45,7 @@ function MyCanvas() {
       const token = localStorage.getItem("jsonWebToken");
       const payLoad = {canvasName : document.querySelector('input[name="newCanvasName"]').value}; 
       newCanvasPopupClose() ;
-      const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas`, 
+      const response = await axios.post(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, 
         payLoad, 
         {
           headers: {
@@ -94,11 +94,49 @@ function MyCanvas() {
     // navigate(newDrawTab);
   };
 
+  const handleCanvasExport = async (canvasId) => {
+    try {
+      const token = localStorage.getItem("jsonWebToken");
+      // window.open(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_EXPORT_SERVICE}/${username}/canvas/${canvasId}`, "_blank", "noopener,noreferrer");
+      axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_EXPORT_SERVICE}/${username}/canvas/${canvasId}`, {
+            responseType: "blob",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }).then((res) => {
+            const blob = new Blob([res.data], {type: "image/png"}) ;
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+
+            link.download = `canvas_${canvasId}.png`;
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(downloadUrl);
+
+          }) ;
+          console.log('Did not wait for image!') ;
+    } catch (err) {
+      console.error("Error exporting canvas:", err);
+      alert("Failed to export canvas");
+    }
+  };
+
   // Handle deleting a canvas
   const handleDeleteCanvas = async (canvasId) => {
     if (!window.confirm("Are you sure you want to delete this canvas?")) return;
     try {
-      await axios.delete(`${process.env.BASE_API_URL}/${canvasId}/canvas`);
+      const token = localStorage.getItem("jsonWebToken");
+      await axios.delete(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasId}`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          });
       setCanvases(canvases.filter((c) => c.id !== canvasId));
     } catch (err) {
       console.error("Error deleting canvas:", err);
@@ -111,7 +149,7 @@ function MyCanvas() {
 
   return (
     <div>
-      <div className="blurOverlay">
+      <div className="blurOverlay" style={{minHeight:"100%"}}>
         <h2>{username}’s Canvases</h2>
         <div className="createCanvasContainer">
           <button onClick={newCanvasPopupOpen} style={{ marginBottom: "15px", borderRadius:"5px" }}>
@@ -125,20 +163,25 @@ function MyCanvas() {
         <div className="canvasGrid">
           {
             canvases.map((canvas) => (
-              <div className="canvasTile">
-                <div key={canvas.id}>
+              <div key={canvas.id} className="canvasTile">
+                <div >
                   <h4>{canvas.canvasName}</h4>
                 </div>                
                 <div style={{justifyContent:"center"}}>
-                  <button class="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
+                  <button className="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
                   style={{color: "darkgreen", width:"80%"}}
                   >
                     Open
                   </button>
-                  <button class="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
+                  <button className="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
                   style={{color: "red", width:"80%"}}
                   >
                     Delete
+                  </button>
+                  <button className="canvasActionBtn"onClick={() => handleCanvasExport(canvas.id)}
+                  style={{color: "darkblue", width:"80%"}}
+                  >
+                    Export
                   </button>
                 </div>
               </ div>

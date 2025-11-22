@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.service.annotation.DeleteExchange;
 
 import com.dorobe.dorobe.model.Canvas;
 import com.dorobe.dorobe.model.CanvasElement;
@@ -26,6 +26,12 @@ public class CanvasController {
     @Autowired
     private CanvasService canvasService ;
     
+    @GetMapping("/{loggedInUsername}/canvas/{canvasId}")
+    public ResponseEntity isCanvasOwnedByUser(@PathVariable String loggedInUsername, @PathVariable String canvasId) {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return canvasService.isCanvasOwnedByUser(loggedInUsername, canvasId) ;
+    }
+    
     @GetMapping("/{loggedInUsername}/canvas")
     public List<Canvas> getCanvasByUsername(@PathVariable String loggedInUsername) {
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
@@ -37,7 +43,7 @@ public class CanvasController {
         return canvasService.createNewCanvas(newCanvas, loggedInUsername) ;
     }
     
-    @DeleteExchange("/{loggedInUsername}/canvas/{canvasIdToDelete}")
+    @DeleteMapping("/{loggedInUsername}/canvas/{canvasIdToDelete}")
     public void deleteCanvas(@PathVariable String loggedInUsername, @PathVariable ObjectId canvasIdToDelete) {
         canvasService.deleteCanvas(loggedInUsername, canvasIdToDelete) ;
     } 

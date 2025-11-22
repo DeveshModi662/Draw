@@ -37,7 +37,7 @@ public class SsoConfig {
     public SecurityFilterChain getSsoFilterChain(HttpSecurity httpSecurity) throws Exception {
         System.out.println("dk-SsoConfig-getSsoFilterChain()");
         return httpSecurity
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
+            // .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             .csrf(customizer -> customizer.disable()) 
             .authorizeHttpRequests(request -> request
                 .requestMatchers("signUp", "login", "isLoggedIn", "sendOtp")

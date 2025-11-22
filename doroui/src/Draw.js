@@ -48,7 +48,7 @@ function Draw() {
       const fetchSaveDrawing = async () => {
         console.log('dk-loadUseEffect-getCall') ;
         const token = localStorage.getItem("jsonWebToken");
-        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasid}/draw`, {
+        const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasid}/draw`, {
               headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -165,7 +165,7 @@ function Draw() {
   const clearCanvas = async () => {
     const token = localStorage.getItem("jsonWebToken");
     const response = await axios.delete(
-      `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasid}/draw`,
+      `${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasid}/draw`,
        // ← Body (new elements)
       {
         headers: {
@@ -186,7 +186,7 @@ function Draw() {
       console.log('dk-saveChanges-') ;
       const token = localStorage.getItem("jsonWebToken");
     const response = await axios.post(
-      `${process.env.REACT_APP_BASE_API_URL}/${username}/canvas/${canvasid}/draw`,
+      `${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasid}/draw`,
       delta, // ← Body (new elements)
       {
         headers: {
