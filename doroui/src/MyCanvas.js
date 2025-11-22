@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import './styles/MyCanvas.css' ;
+import SelectCollaborators from './SelectCollaborators' ;
 
 function MyCanvas() {
   const { currentUser : username } = useParams(); // Extract username from URL
@@ -10,6 +11,8 @@ function MyCanvas() {
   const [canvases, setCanvases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [allUsers, setAllUsers] = useState([]) ;
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   // Fetch canvases for this user
   useEffect(() => {
@@ -18,6 +21,24 @@ function MyCanvas() {
         const token = localStorage.getItem("jsonWebToken");
         console.log('dk-username-beforeRest-',username, `${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`) ;
         console.log(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}`) ;
+        
+        console.log('dk-pageload-1') ;
+        const res = await fetch(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/getAllUsers`, {
+              method : 'GET'
+              , headers : {
+                  "Authorization": `Bearer ${localStorage.getItem("jsonWebToken")}`
+              }
+            }) ;
+        console.log('dk-pageload-2') ;
+        const resJson = await res.json() ;
+        console.log('dk-pageload-3') ;
+        await setAllUsers(resJson) ;
+        await setSelectedUsers(allUsers.filter(lovVal => lovVal.username == username)) ;
+        console.log('dk-pageload-4-allUsers', allUsers) ;
+        console.log('dk-pageload-4-selectedUsers', allUsers.filter(lovVal => lovVal.getUsername().equals(username))) ;
+        console.log('dk-pageload-4-selectedUsers', allUsers.map(lovVal => lovVal.getUsername()));
+
+
         const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, {
             headers: {
               "Authorization": `Bearer ${token}`,
@@ -62,27 +83,43 @@ function MyCanvas() {
   };
 
   
-  const newCanvasPopupOpen = () => {
+  const newCanvasPopupOpen = async () => {    
+    // const res = await fetch(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/getAllUsers`, {
+    //   method : 'GET'
+    //   , headers : {
+    //       "Authorization": `Bearer ${localStorage.getItem("jsonWebToken")}`
+    //   }
+    // })
+    // const resJson = await res.json() ;
+    // await setAllUsers(resJson) ;
+
+    console.log('dk-afterGettingAllUsersForCollaborationLOV', allUsers) ;
+    setSelectedUsers(allUsers.filter(lovVal => lovVal.username === username).map(selUser => selUser.username)) ;
     document.getElementsByClassName("createCanvasPopup")[0].style.visibility = "visible" ;
-      document.getElementsByClassName("createCanvasPopup")[0].style.width = "fit-content" ;
-      document.getElementsByClassName("createCanvasPopup")[0].style.height = "fit-content" ;
-      document.getElementsByClassName("createCanvasPopup")[0].style.opacity = 1 ;
-      document.getElementsByClassName("createCanvasPopup")[0].classList.add("open-popup") ;
-      // document.body.classList.add("make-blur") ;
-      document.getElementsByClassName("blurOverlay")[0].classList.add("make-blur") ;
-      // document.body.style.filter = "blur(2px)" ;
-      // document.getElementsByClassName("createCanvasPopup")[0].style.display = "block" ;
+    document.getElementsByClassName("createCanvasPopup")[0].style.width = "fit-content" ;
+    document.getElementsByClassName("createCanvasPopup")[0].style.height = "fit-content" ;
+    document.getElementsByClassName("createCanvasPopup")[0].style.opacity = 1 ;
+    document.getElementsByClassName("createCanvasPopup")[0].classList.add("open-popup") ;
+    // document.body.classList.add("make-blur") ;
+    document.getElementsByClassName("blurOverlay")[0].classList.add("make-blur") ;
+    // document.body.style.filter = "blur(2px)" ;
+    // document.getElementsByClassName("createCanvasPopup")[0].style.display = "block" ;
+    
+    console.log('dk-newCanvasPopupOpen-end') ;
   } ;
 
-  const newCanvasPopupClose = () => {
-      document.getElementsByClassName("createCanvasPopup")[0].style.visibility = "hidden" ;
-      document.getElementsByClassName("createCanvasPopup")[0].style.width = 0 ;
-      document.getElementsByClassName("createCanvasPopup")[0].style.height = 0 ;      
-      document.getElementsByClassName("createCanvasPopup")[0].style.opacity = 0 ;
-      document.getElementsByClassName("createCanvasPopup")[0].classList.remove("open-popup") ;
-      // document.body.classList.remove("make-blur") ;
-      document.getElementsByClassName("blurOverlay")[0].classList.remove("make-blur") ;
-      // document.body.style.filter = "none" ;
+  const newCanvasPopupClose = (e) => {    
+    e.preventDefault() ;
+    console.log('dk-popupclose-1') ;
+    document.getElementsByClassName("createCanvasPopup")[0].style.visibility = "hidden" ;
+    document.getElementsByClassName("createCanvasPopup")[0].style.width = 0 ;
+    document.getElementsByClassName("createCanvasPopup")[0].style.height = 0 ;      
+    document.getElementsByClassName("createCanvasPopup")[0].style.opacity = 0 ;
+    document.getElementsByClassName("createCanvasPopup")[0].classList.remove("open-popup") ;
+    // document.body.classList.remove("make-blur") ;
+    document.getElementsByClassName("blurOverlay")[0].classList.remove("make-blur") ;
+    // document.body.style.filter = "none" ;
+    console.log('dk-popupclose-2') ;
   }
 
   // Handle opening a specific canvas
@@ -234,11 +271,29 @@ function MyCanvas() {
             placeholder="Name of new canvas"
             required
           />
-          <label><strong>Collaborators</strong></label>
-          <input
+          <label><strong>Collaborators</strong></label>          
+          {allUsers.length > 0 ? 
+              <>
+              {console.log('dk-return-if', allUsers)}
+              <SelectCollaborators allUsers={allUsers} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}/> 
+              </>
+              : console.log('dk-return-else', allUsers) 
+          }
+          {/* <input
             name="collaborator"
             placeholder="Select collaborators"
-          />
+          /> */}
+          {/* <select multiple className="usersLov">
+            {
+              allUsers.map(collaborator => {
+                return <option 
+                  key={collaborator.username} 
+                  value={collaborator.username}>
+                {collaborator.username}
+                </option>
+              }) 
+            }
+          </select> */}
           <div style={{display:"flex", flexDirection:"row", width:"100%", alignItems:"center", justifyContent:"center"}}>
             <button className="canvasActionBtn" type="submit" style={{marginRight:"10px"}}>Submit</button>
             <button className="canvasActionBtn" type="cancel" onClick={newCanvasPopupClose}>Cancel</button>

@@ -8,7 +8,6 @@ input {
 .createCanvasPopup {
     padding: 10px 10px 10px 10px ;
     visibility: hidden ;
-    border-radius: 1;
     background-color: gray;
     width: fit-content ;
     height:fit-content ;
@@ -25,6 +24,12 @@ input {
     padding : 15px ;
     /* box-shadow: 0 8px 35px rgba(0, 0, 0, 0.25); */
     transition : transform 1s, top 1s ;
+}
+
+
+.usersLov {
+  width: 100% ;
+  border-radius: 10px;
 }
 
 .make-blur {

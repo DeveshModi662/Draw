@@ -9,6 +9,7 @@ import com.dorobe.dorobe.service.SsoService;
 // import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.security.web.csrf.CsrfToken;
@@ -35,8 +36,14 @@ public class SsoController {
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
         System.out.println("dk-SsoController-getAllUsers()");
-        return userRepo.findAll() ;
-    }
+        return userRepo.findAll().stream()
+                                    .map(user -> {
+                                        User dto = user;
+                                        dto.setPassword(null);
+                                        dto.setId(null);
+                                        return dto;
+                                    }).collect(Collectors.toList()) ;
+    } 
 
     // @PostMapping("/addUser")
     // public User addUser(@RequestBody User newUser) {
