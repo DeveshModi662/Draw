@@ -22,7 +22,7 @@ function App() {
     // console.log(localStorage.getItem("user")) ;
     if(localStorage.getItem("user") && localStorage.getItem("jsonWebToken")) { 
       console.log('App useEffect : ', localStorage.getItem("user"), localStorage.getItem("jsonWebToken")) ;
-      fetch(`${process.env.REACT_APP_BASE_API_URL}/isLoggedIn`, 
+      fetch(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/isLoggedIn`, 
         {
           method : 'GET',
           headers : {
