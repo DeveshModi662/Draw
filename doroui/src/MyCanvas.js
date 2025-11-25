@@ -29,8 +29,10 @@ function MyCanvas() {
                   "Authorization": `Bearer ${localStorage.getItem("jsonWebToken")}`
               }
             }) ;
-        console.log('dk-pageload-2') ;
-        const resJson = await res.json() ;
+          console.log('dk-pageload-2') ;  
+          console.log('dk-getCanvases-res-', res) ;
+        const resJson = await res.json() ;        
+        console.log('dk-getCanvases-resJson', resJson) ;
         console.log('dk-pageload-3') ;
         await setAllUsers(resJson) ;
         await setSelectedUsers(allUsers.filter(lovVal => lovVal.username == username)) ;
@@ -38,7 +40,7 @@ function MyCanvas() {
         console.log('dk-pageload-4-selectedUsers', allUsers.filter(lovVal => lovVal.getUsername().equals(username))) ;
         console.log('dk-pageload-4-selectedUsers', allUsers.map(lovVal => lovVal.getUsername()));
 
-
+          
         const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, {
             headers: {
               "Authorization": `Bearer ${token}`,
@@ -64,8 +66,12 @@ function MyCanvas() {
       console.log('handleCreateCanvas-'
         ,  document.querySelector('input[name="newCanvasName"]').value) ;
       const token = localStorage.getItem("jsonWebToken");
-      const payLoad = {canvasName : document.querySelector('input[name="newCanvasName"]').value}; 
-      newCanvasPopupClose() ;
+      const payLoad = {
+        canvasName : document.querySelector('input[name="newCanvasName"]').value
+        , collaborators : selectedUsers
+        // , owner : username
+      }; 
+      newCanvasPopupClose(e) ;
       const response = await axios.post(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas`, 
         payLoad, 
         {
@@ -197,69 +203,101 @@ function MyCanvas() {
         {canvases.length === 0 ? (
           <p>No canvases found.</p>
         ) : (
-        <div className="canvasGrid">
-          {
-            canvases.map((canvas) => (
-              <div key={canvas.id} className="canvasTile">
-                <div >
-                  <h4>{canvas.canvasName}</h4>
-                </div>                
-                <div style={{justifyContent:"center"}}>
-                  <button className="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
-                  style={{color: "darkgreen", width:"80%"}}
+        <div className = "bothCanvasContainer">
+          <div className="ownedCanvas"> 
+            <h3>Owned canvases</h3>
+            <div className="canvasGrid">
+              {
+                canvases.filter((canvas) => canvas.owner.username === username).map((canvas) => (
+                  <div key={canvas.id} className="canvasTile">
+                    <div >
+                      <h4>{canvas.canvasName}</h4>
+                    </div>                
+                    <div style={{justifyContent:"center"}}>
+                      <button className="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
+                      style={{color: "darkgreen", width:"80%"}}
+                      >
+                        Open
+                      </button>
+                      <button className="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
+                      style={{color: "red", width:"80%"}}
+                      >
+                        Delete
+                      </button>
+                      <button className="canvasActionBtn"onClick={() => handleCanvasExport(canvas.id)}
+                      style={{color: "darkblue", width:"80%"}}
+                      >
+                        Export
+                      </button>
+                    </div>
+                  </ div>
+                  ) 
+                ) 
+              }
+              {/* <ul style={{ listStyle: "none", padding: 0, width : 600 }}>
+                {canvases.map((canvas) => (
+                  <li
+                    key={canvas.id}
+                    style={{
+                      border: "1px solid #ccc",
+                      borderRadius: "10px",
+                      padding: "10px",
+                      marginBottom: "10px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
-                    Open
-                  </button>
-                  <button className="canvasActionBtn"onClick={() => handleDeleteCanvas(canvas.id)}
-                  style={{color: "red", width:"80%"}}
-                  >
-                    Delete
-                  </button>
-                  <button className="canvasActionBtn"onClick={() => handleCanvasExport(canvas.id)}
-                  style={{color: "darkblue", width:"80%"}}
-                  >
-                    Export
-                  </button>
-                </div>
-              </ div>
-              ) 
-            ) 
-          }
-          {/* <ul style={{ listStyle: "none", padding: 0, width : 600 }}>
-            {canvases.map((canvas) => (
-              <li
-                key={canvas.id}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "10px",
-                  padding: "10px",
-                  marginBottom: "10px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div className="canvasTitle">
-                  <strong>{canvas.canvasName}</strong>
-                  <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
-                    Created: {new Date(canvas.createdAt).toLocaleString()}
-                  </p>
-                  <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
-                    Id: {canvas.id}
-                  </p>
-                </div>
-                <div>
-                  <button onClick={() => handleOpenCanvas(canvas.id)}>Open</button>
-                  <button
-                    onClick={() => handleDeleteCanvas(canvas.id)}
-                    style={{ marginLeft: "10px", color: "red" }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul> */}
+                    <div className="canvasTitle">
+                      <strong>{canvas.canvasName}</strong>
+                      <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
+                        Created: {new Date(canvas.createdAt).toLocaleString()}
+                      </p>
+                      <p style={{ margin: 0, fontSize: "0.85em", color: "#555" }}>
+                        Id: {canvas.id}
+                      </p>
+                    </div>
+                    <div>
+                      <button onClick={() => handleOpenCanvas(canvas.id)}>Open</button>
+                      <button
+                        onClick={() => handleDeleteCanvas(canvas.id)}
+                        style={{ marginLeft: "10px", color: "red" }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul> */}
+            </div>
+          </div>  
+          <div className="sharedCanvas"> 
+            <h3>Shared canvases</h3>
+            <div className="canvasGrid">
+              {
+                canvases.filter((canvas) => canvas.owner.username !== username).map((canvas) => (
+                  <div key={canvas.id} className="canvasTile">
+                    <div >
+                      <h4>{canvas.canvasName}</h4>
+                    </div>                
+                    <div style={{justifyContent:"center"}}>
+                      <button className="canvasActionBtn" onClick={() => handleOpenCanvas(canvas.id)}
+                      style={{color: "darkgreen", width:"80%"}}
+                      >
+                        Open
+                      </button>                   
+                      <button className="canvasActionBtn"onClick={() => handleCanvasExport(canvas.id)}
+                      style={{color: "darkblue", width:"80%"}}
+                      >
+                        Export
+                      </button>
+                    </div>
+                  </ div>
+                  ) 
+                ) 
+              }
+            </div>
+          </div>
         </div>
         )}
     </div>

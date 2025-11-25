@@ -41,6 +41,7 @@ public class SsoController {
                                         User dto = user;
                                         dto.setPassword(null);
                                         dto.setId(null);
+                                        dto.setUserCanvas(null);
                                         return dto;
                                     }).collect(Collectors.toList()) ;
     } 
