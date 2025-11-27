@@ -1,7 +1,10 @@
-import React, {useState, useRef, useEffect, useLayoutEffect} from "react" ;
+import React, {useState, useRef, useEffect, useLayoutEffect, use} from "react" ;
 import rough from 'roughjs' ;
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+// import { over } from "stompjs" ;
+import SockJS from "sockjs-client" ;
+import { Client } from "@stomp/stompjs" ;
 
 const generator = rough.generator() ;
 function getGenerator(eleId, x1, y1, x2, y2, type, len) {
@@ -24,7 +27,6 @@ function getRectangleGenerator(eleId, x1, y1, x2, y2, len) {
   return {eleId, x1, y1, x2, y2, elementGenerator, len, saved:false} ;
 } ;
 
-
 function Draw() {
 
   const { username : username } = useParams();
@@ -44,22 +46,58 @@ function Draw() {
   const freehandPoints = [] ;
 
 
+  const clientRef = useRef(null) ;
   useEffect(() => {
-      const fetchSaveDrawing = async () => {
-        console.log('dk-loadUseEffect-getCall') ;
-        const token = localStorage.getItem("jsonWebToken");
-        const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasid}/draw`, {
-              headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-              }
-            });
-        console.log('dk-loadUseEffect-getCall-1-', eleCount.current) ;
-        setElements(response.data);
-        // eleCount.current = elements.length ;
-        console.log('dk-loadUseEffect-getCall-2-', eleCount.current) ;
-      }
-      fetchSaveDrawing() ;
+      const client = new Client({
+        // brokerURL: 'ws://localhost:8765/COLLABSERVICE/ws-draw',
+        // connectHeaders: {},
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+        // webSocketFactory: () => new SockJS('http://localhost:8765/collabservice/ws-draw'),
+        webSocketFactory: () => new SockJS('http://localhost:8888/ws-draw'),
+        onWebSocketError: (error) => console.error('Websocket error:', error),
+      }) ;
+
+      client.onConnect = (frame) => {
+        console.log('dk-Connected to the server:', frame) ; 
+        client.subscribe(`/topic/canvas/${canvasid}/stroke`, (message) => {
+          // const stroke = JSON.parse(message.body);
+          console.log("dk-Received stroke:", message);
+          fetchSaveDrawing(1);
+        });
+      } ;
+
+      client.onStompError = (frame) => {
+        console.error('Broker reported error:', frame.headers['message']) ;
+        console.error('Additional details:', frame.body) ;
+      } ;
+
+      clientRef.current = client ;
+      client.activate() ;
+
+      return () => {
+        client.deactivate() ;
+      } ;
+    }, [] ) ;
+
+
+  const fetchSaveDrawing = async (src) => {
+    console.log('dk-loadUseEffect-getCall-', src) ;
+    const token = localStorage.getItem("jsonWebToken");
+    const response = await axios.get(`${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_DOROBE_SERVICE}/${username}/canvas/${canvasid}/draw`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+    console.log('dk-loadUseEffect-getCall-1-', eleCount.current) ;
+    setElements(response.data);
+    // eleCount.current = elements.length ;
+    console.log('dk-loadUseEffect-getCall-2-', eleCount.current) ;
+  }
+  useEffect(() => {
+      fetchSaveDrawing(0) ;
     }
   , [username, canvasid]
   ) ;
@@ -158,6 +196,11 @@ function Draw() {
     }
     setIsDrawing(false) ;
     saveChanges() ;
+    console.log('dk-publish stroke') ;
+    clientRef.current.publish({
+      destination: `/app/canvas/${canvasid}/stroke`,
+      body: "get"
+    }) ;
   } ;
 
   const printElements = () => {console.log(elements) ;}
