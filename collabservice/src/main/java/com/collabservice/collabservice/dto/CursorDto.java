@@ -13,10 +13,10 @@ public class CursorDto {
     }
     
     public String getType() {
-        return username;
+        return type;
     }
-    public void setType(String username) {
-        this.username = username;
+    public void setType(String type) {
+        this.type = type;
     }
     public double getX() {
         return x;
