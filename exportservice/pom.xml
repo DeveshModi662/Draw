@@ -65,6 +65,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>exportservice-app</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
