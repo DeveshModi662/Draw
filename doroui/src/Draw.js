@@ -81,7 +81,7 @@ function Draw() {
     if(!el) {}
     else {
       el.remove() ;
-      colorMap.delete(userColorMap.current.get(usr)) ;
+      colorMap.current.delete(userColorMap.current.get(usr).color) ;
       userColorMap.current.delete(usr) ;
     }
   }
@@ -112,10 +112,10 @@ function Draw() {
           // const stroke = JSON.parse(message.body);
           console.log("dk-Received cursor move:", message);
           const cursorDto = JSON.parse(message.body) ;
-          // console.log('dk-cursorCompare-', cursorDto.username, `${username}~${canvasid}~${sessionIdCursor.current}`)
-          console.log('dk-cursorCompare-', cursorDto)
-          // if(cursorDto.type === 'move') {
-          if(true) {
+          console.log('dk-cursorCompare-', cursorDto.username, `${username}~${canvasid}~${sessionIdCursor.current}`)
+          // console.log('dk-cursorCompare-', cursorDto)
+          if(cursorDto.type === 'move') {
+          // if(true) {
             if(cursorDto.username !== `${username}~${canvasid}~${sessionIdCursor.current}`) {
               console.log('dk-cursorNewColor-', userColorMap.current.get(cursorDto.username)) ;
               if(userColorMap.current.get(cursorDto.username) === undefined) {
@@ -290,7 +290,7 @@ function Draw() {
           username: `${username}~${canvasid}~${sessionIdCursor.current}`,
           x,
           y
-          // ,type : "move"
+          ,type : "move"
         })
     });
     if(!isDrawing) return ;
