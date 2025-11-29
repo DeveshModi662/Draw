@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.collabservice.collabservice.dto.CursorDto;
+
 @Controller
 public class WsController {
 
@@ -23,5 +25,11 @@ public class WsController {
         );
         // return mssg ;
     }
-
+    @MessageMapping("/canvas/{canvasId}/cursor")
+    @SendTo("/topic/canvas/{canvasId}/cursor")
+    public CursorDto broadcastCursor(
+            @DestinationVariable String canvasId,
+            CursorDto message) {
+        return message;
+    }
 }
