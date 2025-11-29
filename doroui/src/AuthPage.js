@@ -36,7 +36,7 @@ export default function AuthPage({ onAuth }) {
       ) ;
     }
     else {
-      fetch(BASE_URL+`${process.env.REACT_APP_DOROBE_SERVICE}/signUp`, {
+      fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/signUp`, {
         method : 'POST'
         , headers : {
           'Content-Type' : 'application/json'
@@ -66,7 +66,7 @@ export default function AuthPage({ onAuth }) {
     // document.getElementsByClassName("send-otp-button")[0].innerText = "Send OTP" ;
     // }, 10*1000);
     // if(!document.getElementsByClassName("send-otp-button")[0].ariaDisabled) {
-      fetch(BASE_URL+`${process.env.REACT_APP_DOROBE_SERVICE}/sendOtp`, {
+      fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/sendOtp`, {
           method : 'POST'
           , headers : {
             'Content-Type' : 'application/json'
@@ -85,11 +85,11 @@ export default function AuthPage({ onAuth }) {
         </h2>
         <form onSubmit={handleSubmit}
         className="auth-form">
-          <label className="label-css">@gmail email Id</label>
+          <label className="label-css">Gmail ID</label>
           <input
             // type="email"
             name="email"
-            placeholder="Must use @gmail.com mail id"
+            placeholder="Gmail ID"
             value={formData.email}
             onChange={handleChange}
             className="auth-input"
