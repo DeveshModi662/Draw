@@ -5,6 +5,7 @@ import axios from "axios";
 // import { over } from "stompjs" ;
 import SockJS from "sockjs-client" ;
 import { Client } from "@stomp/stompjs" ;
+import "./styles/Draw.css";
 
 const generator = rough.generator() ;
 function getGenerator(eleId, x1, y1, x2, y2, type, len) {
@@ -27,14 +28,19 @@ function getRectangleGenerator(eleId, x1, y1, x2, y2, len) {
   return {eleId, x1, y1, x2, y2, elementGenerator, len, saved:false} ;
 } ;
 
+
 function Draw() {
 
   const { username : username } = useParams();
   const { canvasId : canvasid } = useParams(); 
 
+  const sessionIdCursor = useRef(crypto.randomUUID()) ;
   const canvasRef = useRef() ;
   const ctxRef = useRef() ;
   const roughCanvasRef = useRef() ;
+  const userColorMap = useRef(new Map()) ;
+  const colorMap = useRef(new Map()) ;
+  const cursorLayer = useRef(null) ;
 
   const [isDrawing, setIsDrawing] = useState(false) ;
   const [elements, setElements] = useState([]);
@@ -45,9 +51,44 @@ function Draw() {
 
   const freehandPoints = [] ;
 
+  function updateCursor(src, usr, curPos) {
+    let el = document.getElementById(`cursor-${usr}`) ;
+    // console.log('dk-updateCursor-el-', el) ;
+    console.log('dk-updateCursor-usr-', usr) ;
+    console.log('dk-updateCursor-colorMap-', userColorMap.current) ;
+    // console.log('dk-updateCursor-curPos', curPos.x, curPos.y) ;
+    if(!el) {
+      el = document.createElement("div") ;
+      el.id = `cursor-${usr}` ;
+      el.className = "cursor-dot" ;
+      const label = document.createElement("span");
+      label.className = "cursor-label";
+      label.innerText = usr.slice(0, 2) ;
+      el.appendChild(label);
+      cursorLayer.current.appendChild(el);
+    }
+    el.style.left = `${curPos.x}px`;
+    el.style.top = `${curPos.y}px`;
+    el.style.backgroundColor = `${curPos.color}` ;
+  }
+
+  function removeCursor(src, usr, curPos) {
+    let el = document.getElementById(`cursor-${usr}`) ;
+    // console.log('dk-updateCursor-el-', el) ;
+    console.log('dk-removeCursor-usr-', usr) ;
+    console.log('dk-removeCursor-colorMap-', userColorMap.current) ;
+    // console.log('dk-updateCursor-curPos', curPos.x, curPos.y) ;
+    if(!el) {}
+    else {
+      el.remove() ;
+      colorMap.delete(userColorMap.current.get(usr)) ;
+      userColorMap.current.delete(usr) ;
+    }
+  }
 
   const clientRef = useRef(null) ;
   useEffect(() => {
+      // sessionIdCursor.current = crypto.randomUUID() ;
       const client = new Client({
         // brokerURL: 'ws://localhost:8765/COLLABSERVICE/ws-draw',
         // connectHeaders: {},
@@ -66,7 +107,55 @@ function Draw() {
           console.log("dk-Received stroke:", message);
           fetchSaveDrawing(1);
         });
-      } ;
+        
+        client.subscribe(`/topic/canvas/${canvasid}/cursor`, (message) => {
+          // const stroke = JSON.parse(message.body);
+          console.log("dk-Received cursor move:", message);
+          const cursorDto = JSON.parse(message.body) ;
+          // console.log('dk-cursorCompare-', cursorDto.username, `${username}~${canvasid}~${sessionIdCursor.current}`)
+          console.log('dk-cursorCompare-', cursorDto)
+          // if(cursorDto.type === 'move') {
+          if(true) {
+            if(cursorDto.username !== `${username}~${canvasid}~${sessionIdCursor.current}`) {
+              console.log('dk-cursorNewColor-', userColorMap.current.get(cursorDto.username)) ;
+              if(userColorMap.current.get(cursorDto.username) === undefined) {
+                let getNewColor = true ;
+                let colorx = '#';
+                while(getNewColor) {            
+                  const letters = '0123456789ABCDEF';
+                  colorx  ='#' ;
+                  for (var i = 0; i < 6; i++) {
+                    colorx += letters[Math.floor(Math.random() * 16)];
+                  }
+                  if(colorMap.current.get(colorx) === undefined) {
+                    getNewColor = false ;
+                  }
+                }
+                userColorMap.current.set(cursorDto.username, {
+                  "color" : colorx, 
+                  "x" : cursorDto.x, 
+                  "y" : cursorDto.y
+                }) ;
+                colorMap.current.set(colorx, true) ;
+              }
+              else {
+                userColorMap.current.set(cursorDto.username, {
+                  "color" : userColorMap.current.get(cursorDto.username).color,
+                  "x" : cursorDto.x,
+                  "y" : cursorDto.y
+                }
+              )
+            }
+            updateCursor(1, cursorDto.username, userColorMap.current.get(cursorDto.username)) ;
+          }
+        }
+        else {
+          removeCursor(1, cursorDto.username, userColorMap.current.get(cursorDto.username)) ;
+        }
+      }
+    );
+
+    } ;
 
       client.onStompError = (frame) => {
         console.error('Broker reported error:', frame.headers['message']) ;
@@ -81,6 +170,27 @@ function Draw() {
       } ;
     }, [] ) ;
 
+
+  useEffect(() => {
+    const handleUnload = async () => {
+      console.log('dk-unload-') ;
+      await clientRef.current.publish({
+      destination: `/app/canvas/${canvasid}/cursor`,
+      body: JSON.stringify({
+          username: `${username}~${canvasid}~${sessionIdCursor.current}`,
+          x: 0,
+          y: 0,
+          type : "inactive"       
+        })
+      });
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
 
   const fetchSaveDrawing = async (src) => {
     console.log('dk-loadUseEffect-getCall-', src) ;
@@ -108,6 +218,7 @@ function Draw() {
       const ctx = canvas.getContext("2d") ;
       ctxRef.current = ctx ;
       roughCanvasRef.current = rough.canvas(canvas) ;
+      updateCursor(0, "all", {}) ;
     }
     , []
   ) ;
@@ -165,10 +276,26 @@ function Draw() {
   } ;
 
   const mouseMoveHandlerOnCanvas = (event) => {
+    const {clientX, clientY} = event ;
+    const x = clientX 
+    - canvasRef.current.getBoundingClientRect().left 
+    ;
+    const y = clientY
+    - canvasRef.current.getBoundingClientRect().top 
+    ;
+    console.log('dk-cursorPublish-sessionid-', sessionIdCursor.current) ;
+    clientRef.current.publish({
+      destination: `/app/canvas/${canvasid}/cursor`,
+      body: JSON.stringify({
+          username: `${username}~${canvasid}~${sessionIdCursor.current}`,
+          x,
+          y
+          // ,type : "move"
+        })
+    });
     if(!isDrawing) return ;
     // noOfUseEffect.current++ ;
     // console.log('mouseDownHandlerOnCanvas', noOfUseEffect.current) ;
-    const {clientX, clientY} = event ;
     const index = elements.length - 1 ;
     const {eleId, x1, y1, x2, y2} = elements[index] ;
     if(elementType != 'freehand') {
@@ -288,6 +415,7 @@ function Draw() {
         onMouseMove={mouseMoveHandlerOnCanvas} 
       >
       </canvas>
+      <div  ref={cursorLayer} className="cursor-layer"> </div>
     </div>
   );
 }
