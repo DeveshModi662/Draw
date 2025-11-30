@@ -12,48 +12,86 @@ export default function AuthPage({ onAuth }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // You can call your backend API here
     console.log(isLogin ? "Logging in..." : "Signing up...", formData);
     if(isLogin) {
-      fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/login`, {
-        method : 'POST'
-        , headers : {
-          'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
-      })
-        .then(response => response.json())
-        .then(response => {
-          console.log(response) ;
-          // const token = response.jsonWebToken ;
-          // localStorage.setItem('user', formData.email) ;
-          // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
-          // setIsLogin(true) ;
-          onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
-        }
-      ) ;
+      try {
+        // console.log(`dk-AuthPage-fallback-${process.env.REACT_APP_BASE_API_URL}/login`) ;
+        await fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/login`, {
+          method : 'POST'
+          , headers : {
+            'Content-Type' : 'application/json'
+          },
+          body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
+        })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response) ;
+            // const token = response.jsonWebToken ;
+            // localStorage.setItem('user', formData.email) ;
+            // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
+            // setIsLogin(true) ;
+            onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
+          }
+        ) ;
+      } catch(e) {
+        console.log(`dk-AuthPage-fallback-${process.env.REACT_APP_BASE_API_URL}/login`) ;
+        await fetch(`${process.env.REACT_APP_BASE_API_URL}/login`, {
+          method : 'POST'
+          , headers : {
+            'Content-Type' : 'application/json'
+          },
+          body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
+        })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response) ;
+            // const token = response.jsonWebToken ;
+            // localStorage.setItem('user', formData.email) ;
+            // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
+            // setIsLogin(true) ;
+            onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
+          }
+        ) ;        
+      }
     }
     else {
-      fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/signUp`, {
-        method : 'POST'
-        , headers : {
-          'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify({ "username": formData.email, "password": formData.password, "otp": formData.otp }) 
-      })
-        .then(response => response.json())
-        .then(response => {
-          console.log(response) ;
-          // const token = response.jsonWebToken ;
-          // localStorage.setItem('user', formData.email) ;
-          // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
-          // setIsLogin(true) ;
-          onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
-        }
-      ) ;
-
+      try {
+        fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/signUp`, {
+          method : 'POST'
+          , headers : {
+            'Content-Type' : 'application/json'
+          },
+          body : JSON.stringify({ "username": formData.email, "password": formData.password, "otp": formData.otp }) 
+        })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response) ;
+            // const token = response.jsonWebToken ;
+            // localStorage.setItem('user', formData.email) ;
+            // localStorage.setItem('jsonWebToken', response.jsonWebToken) ;
+            // setIsLogin(true) ;
+            onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
+          }
+        ) ;
+      } catch(e) {
+        console.log(`dk-AuthPage-fallback-${process.env.REACT_APP_BASE_API_URL}/signUp`) ;
+        fetch(`${process.env.REACT_APP_BASE_API_URL}/signUp`, {
+          method : 'POST'
+          , headers : {
+            'Content-Type' : 'application/json'
+          },
+          body : JSON.stringify({ "username": formData.email, "password": formData.password, "otp": formData.otp }) 
+        })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response) ;
+            onAuth({ 'user': formData.email,  'jsonWebToken': response.jsonWebToken});
+          }
+        ) ;
+      }
     }
     // onAuth({ email: formData.email }); // Pass fake user up
   };
@@ -66,6 +104,7 @@ export default function AuthPage({ onAuth }) {
     // document.getElementsByClassName("send-otp-button")[0].innerText = "Send OTP" ;
     // }, 10*1000);
     // if(!document.getElementsByClassName("send-otp-button")[0].ariaDisabled) {
+    try {
       fetch(BASE_URL+`/${process.env.REACT_APP_DOROBE_SERVICE}/sendOtp`, {
           method : 'POST'
           , headers : {
@@ -73,7 +112,18 @@ export default function AuthPage({ onAuth }) {
           },
           body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
         })
-        .then(setOtpSent(true)) ;
+      .then(setOtpSent(true)) ;
+    } catch(e) {
+      console.log(`dk-AuthPage-fallback-${process.env.REACT_APP_BASE_API_URL}/sendOtp`) ;
+      fetch(`${process.env.REACT_APP_BASE_API_URL}/sendOtp`, {
+          method : 'POST'
+          , headers : {
+            'Content-Type' : 'application/json'
+          },
+          body : JSON.stringify({ "username": formData.email, "password": formData.password }) 
+        })
+      .then(setOtpSent(true)) ;    
+    }
     // }
   } ;
 

@@ -5,10 +5,16 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    
+
+    @Value("${cors.url1}")
+    private String corsUrl1 ;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -20,7 +26,7 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-draw")
         // .setAllowedOriginPatterns("http://localhost:8765")
-        .setAllowedOriginPatterns("http://localhost:3000")
+        .setAllowedOriginPatterns(corsUrl1)
         .withSockJS() 
         ;
     }
