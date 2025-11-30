@@ -95,8 +95,11 @@ function Draw() {
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
-        // webSocketFactory: () => new SockJS('http://localhost:8765/collabservice/ws-draw'),
-        webSocketFactory: () => new SockJS('http://localhost:8888/ws-draw'),
+        // webSocketFactory: () => new SockJS(
+            // `${process.env.REACT_APP_GATEWAY_BASE}/${process.env.REACT_APP_COLLAB_SERVICE}/ws-draw`
+          // 'http://localhost:8765/collabservice/collabservice/ws-draw'
+        // ),
+        webSocketFactory: () => new SockJS(`${process.env.REACT_APP_COLLAB_API_URL}/ws-draw`),
         onWebSocketError: (error) => console.error('Websocket error:', error),
       }) ;
 
