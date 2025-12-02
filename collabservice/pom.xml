@@ -8,10 +8,10 @@
 		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.exportservice</groupId>
-	<artifactId>exportservice</artifactId>
+	<groupId>com.collabservice</groupId>
+	<artifactId>collabservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>exportservice</name>
+	<name>collabservice</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -22,7 +22,7 @@
 	</developers>
 	<scm>
 		<connection/>
-		<developerConnection/> 
+		<developerConnection/>
 		<tag/>
 		<url/>
 	</scm>
@@ -39,16 +39,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> 
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-    	</dependency>
-		<!-- <dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>bson</artifactId>
-			<version>4.11.1</version>
-		</dependency> -->
+			<artifactId>spring-boot-starter-websocket</artifactId>
+			<version>3.5.6</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -65,7 +62,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>exportservice-app</finalName>
+		<finalName>collabservice-app</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
