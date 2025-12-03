@@ -20,12 +20,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.beans.factory.annotation.Value;
 import com.dorobe.dorobe.filter.SsoFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SsoConfig {
+
+    @Value("${cors.url2}")
+    private String corsUrl2 ;
 
     @Autowired
     private SsoFilter ssoFilter ;
@@ -70,7 +73,7 @@ public class SsoConfig {
         System.out.println("dk-SsoConfig-corsConfigurationSource()");
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(corsUrl2));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
