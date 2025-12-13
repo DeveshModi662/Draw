@@ -129,6 +129,15 @@ export default function AuthPage({ onAuth }) {
 
   return (
     <div className="auth-container">
+      <div className="disclaimer-banner">
+        <strong>Possible points of failure: Please let me know if...</strong>
+        <ul>
+          <li>Signup/OTP not working - Google App Password/sendgrid expired</li>
+          <li>Taking too long to launch - server on sleep due to inactivity</li>
+          <li>Login failing - MongoDB password may have expired</li>
+          <li>OTP taking too long - try again later</li>
+        </ul>
+      </div>
       <div className="auth-card">
         <h2 className="auth-title">
           {isLogin ? "Login" : "Sign Up"}

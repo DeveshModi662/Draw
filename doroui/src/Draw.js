@@ -41,6 +41,7 @@ function Draw() {
   const userColorMap = useRef(new Map()) ;
   const colorMap = useRef(new Map()) ;
   const cursorLayer = useRef(null) ;
+  const isConnectedRef = useRef(false) ;
 
   const [isDrawing, setIsDrawing] = useState(false) ;
   const [elements, setElements] = useState([]);
@@ -100,75 +101,85 @@ function Draw() {
           // 'http://localhost:8765/collabservice/collabservice/ws-draw'
         // ),
         webSocketFactory: () => new SockJS(`${process.env.REACT_APP_COLLAB_API_URL}/ws-draw`),
-        onWebSocketError: (error) => console.error('Websocket error:', error),
+        onWebSocketError: (error) => {       
+          isConnectedRef.current = false;
+          console.error('Websocket error:', error) ;
+        },
       }) ;
 
       client.onConnect = (frame) => {
-        console.log('dk-Connected to the server:', frame) ; 
-        client.subscribe(`/topic/canvas/${canvasid}/stroke`, (message) => {
-          // const stroke = JSON.parse(message.body);
-          console.log("dk-Received stroke:", message);
-          fetchSaveDrawing(1);
-        });
-        
-        client.subscribe(`/topic/canvas/${canvasid}/cursor`, (message) => {
-          // const stroke = JSON.parse(message.body);
-          console.log("dk-Received cursor move:", message);
-          const cursorDto = JSON.parse(message.body) ;
-          console.log('dk-cursorCompare-', cursorDto.username, `${username}~${canvasid}~${sessionIdCursor.current}`)
-          // console.log('dk-cursorCompare-', cursorDto)
-          if(cursorDto.type === 'move') {
-          // if(true) {
-            if(cursorDto.username !== `${username}~${canvasid}~${sessionIdCursor.current}`) {
-              console.log('dk-cursorNewColor-', userColorMap.current.get(cursorDto.username)) ;
-              if(userColorMap.current.get(cursorDto.username) === undefined) {
-                let getNewColor = true ;
-                let colorx = '#';
-                while(getNewColor) {            
-                  const letters = '0123456789ABCDEF';
-                  colorx  ='#' ;
-                  for (var i = 0; i < 6; i++) {
-                    colorx += letters[Math.floor(Math.random() * 16)];
+          try {
+            console.log('dk-Connected to the server:', frame) ; 
+            client.subscribe(`/topic/canvas/${canvasid}/stroke`, (message) => {
+              // const stroke = JSON.parse(message.body);
+              console.log("dk-Received stroke:", message);
+              fetchSaveDrawing(1);
+            });
+            
+            client.subscribe(`/topic/canvas/${canvasid}/cursor`, (message) => {
+              // const stroke = JSON.parse(message.body);
+              console.log("dk-Received cursor move:", message);
+              const cursorDto = JSON.parse(message.body) ;
+              console.log('dk-cursorCompare-', cursorDto.username, `${username}~${canvasid}~${sessionIdCursor.current}`)
+              // console.log('dk-cursorCompare-', cursorDto)
+              if(cursorDto.type === 'move') {
+              // if(true) {
+                if(cursorDto.username !== `${username}~${canvasid}~${sessionIdCursor.current}`) {
+                  console.log('dk-cursorNewColor-', userColorMap.current.get(cursorDto.username)) ;
+                  if(userColorMap.current.get(cursorDto.username) === undefined) {
+                    let getNewColor = true ;
+                    let colorx = '#';
+                    while(getNewColor) {            
+                      const letters = '0123456789ABCDEF';
+                      colorx  ='#' ;
+                      for (var i = 0; i < 6; i++) {
+                        colorx += letters[Math.floor(Math.random() * 16)];
+                      }
+                      if(colorMap.current.get(colorx) === undefined) {
+                        getNewColor = false ;
+                      }
+                    }
+                    userColorMap.current.set(cursorDto.username, {
+                      "color" : colorx, 
+                      "x" : cursorDto.x, 
+                      "y" : cursorDto.y
+                    }) ;
+                    colorMap.current.set(colorx, true) ;
                   }
-                  if(colorMap.current.get(colorx) === undefined) {
-                    getNewColor = false ;
-                  }
+                  else {
+                    userColorMap.current.set(cursorDto.username, {
+                      "color" : userColorMap.current.get(cursorDto.username).color,
+                      "x" : cursorDto.x,
+                      "y" : cursorDto.y
+                    }
+                  )
                 }
-                userColorMap.current.set(cursorDto.username, {
-                  "color" : colorx, 
-                  "x" : cursorDto.x, 
-                  "y" : cursorDto.y
-                }) ;
-                colorMap.current.set(colorx, true) ;
+                updateCursor(1, cursorDto.username, userColorMap.current.get(cursorDto.username)) ;
               }
-              else {
-                userColorMap.current.set(cursorDto.username, {
-                  "color" : userColorMap.current.get(cursorDto.username).color,
-                  "x" : cursorDto.x,
-                  "y" : cursorDto.y
-                }
-              )
             }
-            updateCursor(1, cursorDto.username, userColorMap.current.get(cursorDto.username)) ;
+            else {
+              removeCursor(1, cursorDto.username, userColorMap.current.get(cursorDto.username)) ;
+            }
           }
-        }
-        else {
-          removeCursor(1, cursorDto.username, userColorMap.current.get(cursorDto.username)) ;
-        }
+        );
+        isConnectedRef.current = true ;
+      } catch {
+        isConnectedRef.current = false; 
       }
-    );
 
     } ;
 
       client.onStompError = (frame) => {
         console.error('Broker reported error:', frame.headers['message']) ;
         console.error('Additional details:', frame.body) ;
+        isConnectedRef.current = false; 
       } ;
 
       clientRef.current = client ;
       client.activate() ;
 
       return () => {
+        isConnectedRef.current = false; 
         client.deactivate() ;
       } ;
     }, [] ) ;
@@ -177,15 +188,21 @@ function Draw() {
   useEffect(() => {
     const handleUnload = async () => {
       console.log('dk-unload-') ;
-      await clientRef.current.publish({
-      destination: `/app/canvas/${canvasid}/cursor`,
-      body: JSON.stringify({
-          username: `${username}~${canvasid}~${sessionIdCursor.current}`,
-          x: 0,
-          y: 0,
-          type : "inactive"       
-        })
-      });
+      try {
+        if(isConnectedRef.current === true) {
+          await clientRef.current.publish({
+          destination: `/app/canvas/${canvasid}/cursor`,
+          body: JSON.stringify({
+              username: `${username}~${canvasid}~${sessionIdCursor.current}`,
+              x: 0,
+              y: 0,
+              type : "inactive"       
+            })
+          });
+        }
+      } catch {               
+          isConnectedRef.current = false;
+      }
     };
 
     window.addEventListener("beforeunload", handleUnload);
@@ -287,15 +304,23 @@ function Draw() {
     - canvasRef.current.getBoundingClientRect().top 
     ;
     console.log('dk-cursorPublish-sessionid-', sessionIdCursor.current) ;
-    clientRef.current.publish({
-      destination: `/app/canvas/${canvasid}/cursor`,
-      body: JSON.stringify({
-          username: `${username}~${canvasid}~${sessionIdCursor.current}`,
-          x,
-          y
-          ,type : "move"
-        })
-    });
+    try {
+      if(isConnectedRef.current === true) {
+        clientRef.current.publish({
+          destination: `/app/canvas/${canvasid}/cursor`,
+          body: JSON.stringify({
+              username: `${username}~${canvasid}~${sessionIdCursor.current}`,
+              x,
+              y
+              ,type : "move"
+            })
+        });
+      }
+    } catch {
+      isConnectedRef.current = false ;
+    }
+
+
     if(!isDrawing) return ;
     // noOfUseEffect.current++ ;
     // console.log('mouseDownHandlerOnCanvas', noOfUseEffect.current) ;
@@ -327,10 +352,16 @@ function Draw() {
     setIsDrawing(false) ;
     saveChanges() ;
     console.log('dk-publish stroke') ;
-    clientRef.current.publish({
-      destination: `/app/canvas/${canvasid}/stroke`,
-      body: "get"
-    }) ;
+    try {
+      if(isConnectedRef.current === true) {
+        clientRef.current.publish({
+          destination: `/app/canvas/${canvasid}/stroke`,
+          body: "get"
+        }) ;
+      }
+    } catch {
+      isConnectedRef.current = false ;
+    }
   } ;
 
   const printElements = () => {console.log(elements) ;}
