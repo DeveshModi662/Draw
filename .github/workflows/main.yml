@@ -20,13 +20,13 @@ jobs:
         run: |
           echo "Branch : ${{github.ref_name}}"
           cd dorobe
-          docker rmi \
-            deveshmodi662/${{github.ref_name}}-dorobe-app:v1 \
-            deveshmodi662/${{github.ref_name}}-exportservice-app:v1 \
-            deveshmodi662/${{github.ref_name}}-collabservice-app:v1 \
-            deveshmodi662/${{github.ref_name}}-exportservice-app:v1 \
-            deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 \
-            deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1
+          # docker rmi \
+          #   deveshmodi662/${{github.ref_name}}-dorobe-app:v1 \
+          #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 \
+          #   deveshmodi662/${{github.ref_name}}-collabservice-app:v1 \
+          #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 \
+          #   deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 \
+          #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1
           docker build -t deveshmodi662/${{github.ref_name}}-dorobe-app:v1 .
           cd ..
           cd exportservice
