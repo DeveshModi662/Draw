@@ -2,8 +2,6 @@ name: DevOps Actions
 
 on:
   push:
-    branches:
-      - devops-actions-0
 
 jobs:
   job0:
@@ -28,7 +26,10 @@ jobs:
           )
 
           foreach ($img in $images) {
-            docker rmi $img 2> $null
+            docker image inspect $img *>$null
+            if($LASTEXITCODE -eq 0) {
+              docker rmi $img
+            }
           }
 
         
