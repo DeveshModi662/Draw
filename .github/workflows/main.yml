@@ -1,0 +1,22 @@
+name: DevOps Actions
+
+on:
+  push:
+    branches:
+      - devops-actions-0
+
+jobs:
+  job0:
+    name: Job0
+    runs-on: self-hosted
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      # 7. (Optional) Print build artifacts
+      - name: Ping
+        run: |
+          echo "Code:"
+          ls doro
