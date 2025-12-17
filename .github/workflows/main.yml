@@ -18,5 +18,7 @@ jobs:
       # 7. (Optional) Print build artifacts
       - name: Ping
         run: |
-          echo "Code:"
+          echo "Branch : {$GITHUB_REF_NAME}"
+          cd dorobe
           ls
+          # docker build -t deveshmodi662/{$GITHUB_REF_NAME}-dorobe-app:v3 .
