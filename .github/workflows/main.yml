@@ -21,4 +21,4 @@ jobs:
           echo "Branch : ${{github.ref_name}}"
           cd dorobe
           ls
-          # docker build -t deveshmodi662/${{github.ref_name}}-dorobe-app:v3 .
+          docker build -t deveshmodi662/${{github.ref_name}}-dorobe-app:v3 .
