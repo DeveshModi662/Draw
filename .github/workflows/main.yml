@@ -27,7 +27,7 @@ jobs:
             deveshmodi662/${{github.ref_name}}-exportservice-app:v1 \
             deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 \
             deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 \
-            deveshmodi662/${{github.ref_name}}-doroui-app:v1 \ 
+            deveshmodi662/${{github.ref_name}}-doroui-app:v1 \
             || true
           docker build -t deveshmodi662/${{github.ref_name}}-dorobe-app:v1 .
           cd ..
