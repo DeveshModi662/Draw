@@ -15,6 +15,8 @@ jobs:
 
       - name: Remove old images
         run: |
+          $ErrorActionPreference = "SilentlyContinue"
+          
           $images = @(
             "deveshmodi662/${{github.ref_name}}-dorobe-app:v1",
             "deveshmodi662/${{github.ref_name}}-exportservice-app:v1", 
