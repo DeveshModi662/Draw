@@ -26,7 +26,8 @@ jobs:
           #   deveshmodi662/${{github.ref_name}}-collabservice-app:v1 \
           #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 \
           #   deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 \
-          #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1
+          #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 \
+          #   deveshmodi662/${{github.ref_name}}-doroui-app:v1
           docker build -t deveshmodi662/${{github.ref_name}}-dorobe-app:v1 .
           cd ..
           cd exportservice
@@ -40,5 +41,8 @@ jobs:
           cd ..
           cd serviceregistry
           docker build -t deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 .
+          cd ..
+          cd doroui
+          docker build -t deveshmodi662/${{github.ref_name}}-doroui-app:v1 .
           cd ..
           
