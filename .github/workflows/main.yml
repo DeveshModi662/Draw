@@ -19,4 +19,4 @@ jobs:
       - name: Ping
         run: |
           echo "Code:"
-          ls doro
+          ls
