@@ -15,24 +15,26 @@ jobs:
 
       - name: Remove old images
         run: |
-          $ErrorActionPreference = "SilentlyContinue"
+          # $ErrorActionPreference = "SilentlyContinue"
           
-          $images = @(
-            "deveshmodi662/dorobe-app:${{github.ref_name}}",
-            "deveshmodi662/exportservice-app:${{github.ref_name}}", 
-            "deveshmodi662/collabservice-app:${{github.ref_name}}", 
-            "deveshmodi662/exportservice-app:${{github.ref_name}}", 
-            "deveshmodi662/gatewayservice-app:${{github.ref_name}}", 
-            "deveshmodi662/serviceregistry-app:${{github.ref_name}}", 
-            "deveshmodi662/doroui-app:${{github.ref_name}}"
+          # $images = @(
+            "deveshmodi662/dorobe-app:${{github.ref_name}}"
+            # "deveshmodi662/exportservice-app:${{github.ref_name}}", 
+            # "deveshmodi662/collabservice-app:${{github.ref_name}}", 
+            # "deveshmodi662/exportservice-app:${{github.ref_name}}", 
+            # "deveshmodi662/gatewayservice-app:${{github.ref_name}}", 
+            # "deveshmodi662/serviceregistry-app:${{github.ref_name}}", 
+            # "deveshmodi662/doroui-app:${{github.ref_name}}"
           )
 
-          foreach ($img in $images) {
-            docker image inspect $img *>$null
-            if($LASTEXITCODE -eq 0) {
-              docker rmi $img
-            }
-          }
+          # foreach ($img in $images) {
+          #   docker image inspect $img *>$null
+          #   if($LASTEXITCODE -eq 0) {
+          #     docker rmi $img
+          #   }
+          # }
+
+          echo "Skipped delete"
 
         
       # 7. (Optional) Print build artifacts
