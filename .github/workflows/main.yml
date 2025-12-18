@@ -18,13 +18,13 @@ jobs:
           $ErrorActionPreference = "SilentlyContinue"
           
           $images = @(
-            "deveshmodi662/${{github.ref_name}}-dorobe-app:v1",
-            "deveshmodi662/${{github.ref_name}}-exportservice-app:v1", 
-            "deveshmodi662/${{github.ref_name}}-collabservice-app:v1", 
-            "deveshmodi662/${{github.ref_name}}-exportservice-app:v1", 
-            "deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1", 
-            "deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1", 
-            "deveshmodi662/${{github.ref_name}}-doroui-app:v1"
+            "deveshmodi662/dorobe-app:${{github.ref_name}}",
+            "deveshmodi662/exportservice-app:${{github.ref_name}}", 
+            "deveshmodi662/collabservice-app:${{github.ref_name}}", 
+            "deveshmodi662/exportservice-app:${{github.ref_name}}", 
+            "deveshmodi662/gatewayservice-app:${{github.ref_name}}", 
+            "deveshmodi662/serviceregistry-app:${{github.ref_name}}", 
+            "deveshmodi662/doroui-app:${{github.ref_name}}"
           )
 
           foreach ($img in $images) {
@@ -49,21 +49,21 @@ jobs:
           #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 `
           #   deveshmodi662/${{github.ref_name}}-doroui-app:v1 `
           #   || true
-          docker build -t deveshmodi662/${{github.ref_name}}-dorobe-app:v1 .
+          docker build -t deveshmodi662/dorobe-app:${{github.ref_name}} .
           cd ..
           cd exportservice
-          docker build -t deveshmodi662/${{github.ref_name}}-exportservice-app:v1 .
+          docker build -t deveshmodi662/exportservice-app:${{github.ref_name}} .
           cd ..
           cd collabservice
-          docker build -t deveshmodi662/${{github.ref_name}}-collabservice-app:v1 .
+          docker build -t deveshmodi662/collabservice-app:${{github.ref_name}} .
           cd ..
           cd gatewayservice
-          docker build -t deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 .
+          docker build -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
           cd ..
           cd serviceregistry
-          docker build -t deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 .
+          docker build -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
           cd ..
           cd doroui
-          docker build -t deveshmodi662/${{github.ref_name}}-doroui-app:v1 .
+          docker build -t deveshmodi662/doroui-app:${{github.ref_name}} .
           cd ..
           
