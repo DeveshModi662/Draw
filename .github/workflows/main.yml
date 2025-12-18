@@ -25,7 +25,7 @@ jobs:
             # "deveshmodi662/gatewayservice-app:${{github.ref_name}}", 
             # "deveshmodi662/serviceregistry-app:${{github.ref_name}}", 
             # "deveshmodi662/doroui-app:${{github.ref_name}}"
-          )
+          # )
 
           # foreach ($img in $images) {
           #   docker image inspect $img *>$null
