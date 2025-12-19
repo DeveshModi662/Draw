@@ -64,6 +64,7 @@ jobs:
           cd ..
           cd gatewayservice
           docker build -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
+          docker push deveshmodi662/gatewayservice-app:${{github.ref_name}}
           cd ..
           cd serviceregistry
           docker build -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
