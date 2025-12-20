@@ -51,38 +51,49 @@ jobs:
           #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 `
           #   deveshmodi662/${{github.ref_name}}-doroui-app:v1 `
           #   || true
-          docker build -t deveshmodi662/dorobe-app:${{github.ref_name}} .
+          docker build --no-cache -t deveshmodi662/dorobe-app:${{github.ref_name}} .
           docker push deveshmodi662/dorobe-app:${{github.ref_name}}
           cd ..
           cd exportservice
-          docker build -t deveshmodi662/exportservice-app:${{github.ref_name}} .
+          docker build --no-cache -t deveshmodi662/exportservice-app:${{github.ref_name}} .
           docker push deveshmodi662/exportservice-app:${{github.ref_name}}
           cd ..
           cd collabservice
-          docker build -t deveshmodi662/collabservice-app:${{github.ref_name}} .
+          docker build --no-cache -t deveshmodi662/collabservice-app:${{github.ref_name}} .
           docker push deveshmodi662/collabservice-app:${{github.ref_name}}
           cd ..
           cd gatewayservice
-          docker build -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
+          docker build --no-cache -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
           docker push deveshmodi662/gatewayservice-app:${{github.ref_name}}
           cd ..
           cd serviceregistry
-          docker build -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
+          docker build --no-cache -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
           docker push deveshmodi662/serviceregistry-app:${{github.ref_name}}
           cd ..
           cd doroui
           
           # Create .env file REQUIRED at build time
-          echo "REACT_APP_GATEWAY_BASE=http://localhost:30765
-          REACT_APP_DOROBE_SERVICE=dorobe
-          REACT_APP_BASE_API_URL=http://dorobe:8000
-          REACT_APP_BASE_API_DELETEME=http://dorobe:8000
-          REACT_APP_EXPORT_SERVICE=exportservice
-          REACT_APP_EXPORT_API_URL=http://exportservice:8080
-          REACT_APP_COLLAB_SERVICE=collabservice
-          REACT_APP_COLLAB_API_URL=http://localhost:30888" > .env
+          # echo "REACT_APP_GATEWAY_BASE=http://localhost:30765
+          # REACT_APP_DOROBE_SERVICE=dorobe
+          # REACT_APP_BASE_API_URL=http://dorobe:8000
+          # REACT_APP_BASE_API_DELETEME=http://dorobe:8000
+          # REACT_APP_EXPORT_SERVICE=exportservice
+          # REACT_APP_EXPORT_API_URL=http://exportservice:8080
+          # REACT_APP_COLLAB_SERVICE=collabservice
+          # REACT_APP_COLLAB_API_URL=http://localhost:30888" > .env
           
-          docker build -t deveshmodi662/doroui-app:${{github.ref_name}} .
+          # @"
+          # REACT_APP_GATEWAY_BASE=http://localhost:30765
+          # REACT_APP_DOROBE_SERVICE=dorobe
+          # REACT_APP_BASE_API_URL=http://dorobe:8000
+          # REACT_APP_BASE_API_DELETEME=http://dorobe:8000
+          # REACT_APP_EXPORT_SERVICE=exportservice
+          # REACT_APP_EXPORT_API_URL=http://exportservice:8080
+          # REACT_APP_COLLAB_SERVICE=collabservice
+          # REACT_APP_COLLAB_API_URL=http://localhost:30888
+          # "@ | Set-Content doroui/.env -Encoding utf8
+          
+          docker build --no-cache -t deveshmodi662/doroui-app:${{github.ref_name}} .
           docker push deveshmodi662/doroui-app:${{github.ref_name}}
           cd ..
           
