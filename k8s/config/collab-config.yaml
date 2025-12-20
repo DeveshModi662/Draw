@@ -1,0 +1,11 @@
+# k8s/config/gateway-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: collab-config
+data:
+  APPNAMEWS: collabservice
+  PORTWS: "8888"
+  CORSURL1WS: http://localhost:30080
+  EUREKA_INSTANCE_PREFERIPADDRESS: "true"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service.simple-ns:8761/eureka/

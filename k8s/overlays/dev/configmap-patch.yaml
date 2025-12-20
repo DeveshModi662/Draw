@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  CORSURLGATEWAY: http://localhost:30080
+  CORSURL1WS: http://localhost:30080

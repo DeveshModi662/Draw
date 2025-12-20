@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collab-deployment
+  labels:
+    app: doro
+    microservice : collab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doro
+      microservice : collab
+  template:
+    metadata:
+      labels:
+        app: doro
+        microservice : collab
+    spec:
+      containers:
+      - name: collab-container
+        image: deveshmodi662/collabservice-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8888
+        envFrom : 
+          - configMapRef:
+              name: collab-config
