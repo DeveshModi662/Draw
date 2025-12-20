@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: export-deployment
+  labels:
+    app: doro
+    microservice : export
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doro
+      microservice : export
+  template:
+    metadata:
+      labels:
+        app: doro
+        microservice : export
+    spec:
+      containers:
+      - name: export-container
+        image: deveshmodi662/exportservice-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        envFrom : 
+          - configMapRef:
+              name: export-config

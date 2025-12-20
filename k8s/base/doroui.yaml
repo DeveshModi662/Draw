@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doroui-deployment
+  labels:
+    app: doro
+    microservice : doroui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doro
+      microservice : doroui
+  template:
+    metadata:
+      labels:
+        app: doro
+        microservice : doroui
+    spec:
+      containers:
+      - name: doroui-container
+        image: deveshmodi662/doroui-app:v2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom : 
+          - configMapRef:
+              name: doroui-config

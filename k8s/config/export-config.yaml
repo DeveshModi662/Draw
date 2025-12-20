@@ -1,0 +1,14 @@
+# k8s/config/gateway-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: export-config
+data:
+  APPNAMEEXPORT: exportservice
+  PORTEXPORT: "8080"
+  DBURIEXPORT: mongodb+srv://zulu:zulu@doro.q4ymutv.mongodb.net/?retryWrites=true&w=majority&appName=Doro
+  DBNAMEEXPORT: Doro
+  CORS1EXPORT: http://dorui
+  EUREKA_INSTANCE_PREFERIPADDRESS: "true"
+  #: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service.simple-ns:8761/eureka/

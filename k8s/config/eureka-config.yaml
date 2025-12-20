@@ -1,0 +1,8 @@
+# k8s/config/gateway-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eureka-config
+data:
+  APPNAMEEUREKA: serviceregistry
+  PORTEUREKA: "8761"

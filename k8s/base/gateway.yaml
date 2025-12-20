@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: doro
+    microservice : gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doro
+      microservice : gateway
+  template:
+    metadata:
+      labels:
+        app: doro
+        microservice : gateway
+    spec:
+      containers:
+      - name: gateway-container
+        image: deveshmodi662/gatewayservice-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8765
+        envFrom : 
+          - configMapRef:
+              name: gateway-config

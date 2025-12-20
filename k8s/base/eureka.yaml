@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-deployment
+  labels:
+    app: doro
+    microservice : eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doro
+      microservice : eureka
+  template:
+    metadata:
+      labels:
+        app: doro
+        microservice : eureka
+    spec:
+      containers:
+      - name: eureka-container
+        image: deveshmodi662/serviceregistry-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8761
+        envFrom : 
+          - configMapRef:
+              name: eureka-config

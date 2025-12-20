@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- collab-config.yaml
+- dorobe-config.yaml
+- doroui-config.yaml
+- eureka-config.yaml
+- export-config.yaml
+- gateway-config.yaml
