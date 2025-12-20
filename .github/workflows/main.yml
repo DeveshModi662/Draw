@@ -40,8 +40,6 @@ jobs:
       # 7. (Optional) Print build artifacts
       - name: Build and push images
         run: |
-          echo "Branch : ${{github.ref_name}}"
-          cd dorobe
           # docker rmi `
           #   deveshmodi662/${{github.ref_name}}-dorobe-app:v1 `
           #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 `
@@ -51,6 +49,9 @@ jobs:
           #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 `
           #   deveshmodi662/${{github.ref_name}}-doroui-app:v1 `
           #   || true
+          
+          echo "Branch : ${{github.ref_name}}"
+          cd dorobe
           docker build --no-cache -t deveshmodi662/dorobe-app:${{github.ref_name}} .
           docker push deveshmodi662/dorobe-app:${{github.ref_name}}
           cd ..
@@ -96,4 +97,15 @@ jobs:
           docker build --no-cache -t deveshmodi662/doroui-app:${{github.ref_name}} .
           docker push deveshmodi662/doroui-app:${{github.ref_name}}
           cd ..
+          
+      - name: Kubectl 1
+        run: |
+          echo "Branch : ${{github.ref_name}}"
+          $env:BRANCH_NAME="${{github.ref_name}}"
+
+          kubectl create namespace $env:BRANCH_NAME
+          kubectl config set-context --current --namespace=$env:BRANCH_NAME
+          
+          echo $env:BRANCH_NAME ; kubectl kustomize overlays/dev | envsubst | kubectl apply -n $env:BRANCH_NAME -f -
+          
           
