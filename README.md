@@ -5,7 +5,7 @@ For dev :
 2. Build the image on pushing changes to dev branch using Github actions self hosted runner
 3. Auto patch the changes to test using Kubernetes' Kind cluster
 
-Java, Sprinboot, ReactJS, Docker, Github actions, Websockets, Kubernetes
+__Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kubernetes__
 
 For users : 
 1. Sign up and OTP authentication
