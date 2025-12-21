@@ -116,6 +116,7 @@ jobs:
           
       - name: Kubectl 1 Set secrets and variables
         run: |
+          ls -Name
           cd k8s
           $env:BRANCH_NAME="${{github.ref_name}}"
           $env:DBURI="${{secrets.DBURI}}"
@@ -123,12 +124,8 @@ jobs:
           $env:GADD="${{secrets.GADD}}"
           $env:GADDPASS="${{secrets.GADDPASS}}"
 
-          echo $env:BRANCH_NAME $env:DBURI $env:DBURIEXPORT $env:GADD $env:GADDPASS
-
-      - name: Kubectl 2 create config patches
-        run: |          
-          ls -Name
-          cd k8s
+          echo $env:BRANCH_NAME $env:DBURI $env:DBURIEXPORT $env:GADD $env:GADDPASS   
+          
           @" 
           apiVersion: v1 
           kind: ConfigMap 
@@ -173,9 +170,7 @@ jobs:
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://$($env:BRANCH_NAME)-eureka-service.$($env:BRANCH_NAME):8761/eureka/ 
             CORSURLGATEWAY: http://localhost:30080
           "@ | Out-File overlays/dev/collab-configmap-patch.yaml -Encoding ascii
-
-      - name: Kubectl 3 create resources
-        run: |          
+          
           kubectl create namespace $env:BRANCH_NAME
           kubectl config set-context --current --namespace=$env:BRANCH_NAME          
           
