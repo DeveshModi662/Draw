@@ -7,10 +7,10 @@ resources:
 - ../../services
 
 patches:
-- collab-configmap-patch.yaml
-- dorobe-configmap-patch.yaml
-- export-configmap-patch.yaml
-- gateway-configmap-patch.yaml
+- path: collab-configmap-patch.yaml
+- path: dorobe-configmap-patch.yaml
+- path: export-configmap-patch.yaml
+- path: gateway-configmap-patch.yaml
 
 namePrefix: ${BRANCH_NAME}- 
 images:
