@@ -15,8 +15,8 @@ jobs:
 
       - name: Docker login Remove old images
         run: |
-          docker login
-          $env:DOCKER_BUILDKIT=0
+          # docker login
+          # $env:DOCKER_BUILDKIT=0
           # $ErrorActionPreference = "SilentlyContinue"
           
           # $images = @(
