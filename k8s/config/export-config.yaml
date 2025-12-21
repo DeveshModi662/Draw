@@ -6,7 +6,7 @@ metadata:
 data:
   APPNAMEEXPORT: exportservice
   PORTEXPORT: "8080"
-  DBURIEXPORT: mongodb+srv://zulu:zulu@doro.q4ymutv.mongodb.net/?retryWrites=true&w=majority&appName=Doro
+  DBURIEXPORT: DBURIEXPORTPLACEHOLDER
   DBNAMEEXPORT: Doro
   CORS1EXPORT: http://dorui
   EUREKA_INSTANCE_PREFERIPADDRESS: "true"

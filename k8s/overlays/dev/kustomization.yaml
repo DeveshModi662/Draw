@@ -6,8 +6,11 @@ resources:
 - ../../config
 - ../../services
 
-patchesStrategicMerge:
-- configmap-patch.yaml
+patches:
+- collab-configmap-patch.yaml
+- dorobe-configmap-patch.yaml
+- export-configmap-patch.yaml
+- gateway-configmap-patch.yaml
 
 namePrefix: ${BRANCH_NAME}- 
 images:

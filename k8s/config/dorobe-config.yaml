@@ -6,11 +6,11 @@ metadata:
 data:
   APPNAMEBE: dorobe
   PORTBE: "8000"
-  DBURI: mongodb+srv://zulu:zulu@doro.q4ymutv.mongodb.net/?retryWrites=true&w=majority&appName=Doro
+  DBURI: DBURIPLACEHOLDER
   DBNAME: Doro
   CORS1: http://doroui
   CORSGATEWAY: http://gateway:8765
-  GAPPPASS: uxcmrhbqpzdziuwm
-  GADD: login0662@gmail.com
+  GAPPPASS: GAPPPASSPLACEHOLDER
+  GADD: GADDPLACEHOLDER
   EUREKA_INSTANCE_PREFERIPADDRESS: "true"
   EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service.simple-ns:8761/eureka/
