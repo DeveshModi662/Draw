@@ -38,7 +38,7 @@ jobs:
 
         
       # 7. (Optional) Print build artifacts
-      - name: Build and push images
+      - name: Build and push images DOROBE 
         run: |
           # docker rmi `
           #   deveshmodi662/${{github.ref_name}}-dorobe-app:v1 `
@@ -55,10 +55,16 @@ jobs:
           docker build --no-cache -t deveshmodi662/dorobe-app:${{github.ref_name}} .
           docker push deveshmodi662/dorobe-app:${{github.ref_name}}
           cd ..
+          
+      - name: Build and push images EXPORT
+        run: |          
           cd exportservice
           docker build --no-cache -t deveshmodi662/exportservice-app:${{github.ref_name}} .
           docker push deveshmodi662/exportservice-app:${{github.ref_name}}
           cd ..
+          
+      - name: Build and push images COLLAB
+        run: |          
           cd collabservice
           docker build --no-cache -t deveshmodi662/collabservice-app:${{github.ref_name}} .
           docker push deveshmodi662/collabservice-app:${{github.ref_name}}
@@ -67,12 +73,17 @@ jobs:
           docker build --no-cache -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
           docker push deveshmodi662/gatewayservice-app:${{github.ref_name}}
           cd ..
+          
+      - name: Build and push images EUREKA
+        run: |        
           cd serviceregistry
           docker build --no-cache -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
           docker push deveshmodi662/serviceregistry-app:${{github.ref_name}}
           cd ..
-          cd doroui
           
+      - name: Build and push images DORUI
+        run: |          
+          cd doroui          
           # Create .env file REQUIRED at build time
           # echo "REACT_APP_GATEWAY_BASE=http://localhost:30765
           # REACT_APP_DOROBE_SERVICE=dorobe
@@ -98,7 +109,7 @@ jobs:
           docker push deveshmodi662/doroui-app:${{github.ref_name}}
           cd ..
           
-      - name: Kubectl 1
+      - name: Kubectl 1 Set secrets and variables
         run: |
           cd k8s
           $env:BRANCH_NAME="${{github.ref_name}}"
@@ -109,6 +120,8 @@ jobs:
 
           echo $env:BRANCH_NAME $env:DBURI $env:DBURIEXPORT $env:GADD $env:GADDPASS
 
+      - name: Kubectl 2 create config patches
+        run: |          
           @" 
           apiVersion: v1 
           kind: ConfigMap 
@@ -154,6 +167,8 @@ jobs:
             CORSURLGATEWAY: http://localhost:30080
           "@ | Out-File overlays/dev/collab-configmap-patch.yaml -Encoding ascii
 
+      - name: Kubectl 3 create resources
+        run: |          
           kubectl create namespace $env:BRANCH_NAME
           kubectl config set-context --current --namespace=$env:BRANCH_NAME          
           
