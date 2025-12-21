@@ -127,6 +127,7 @@ jobs:
 
       - name: Kubectl 2 create config patches
         run: |          
+          ls -Name
           @" 
           apiVersion: v1 
           kind: ConfigMap 
