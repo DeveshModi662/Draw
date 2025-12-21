@@ -13,8 +13,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove old images
+      - name: Docker login Remove old images
         run: |
+          docker login
           # $ErrorActionPreference = "SilentlyContinue"
           
           # $images = @(
