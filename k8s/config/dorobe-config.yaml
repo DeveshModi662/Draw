@@ -1,0 +1,16 @@
+# k8s/config/gateway-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dorobe-config
+data:
+  APPNAMEBE: dorobe
+  PORTBE: "8000"
+  DBURI: DBURIPLACEHOLDER
+  DBNAME: Doro
+  CORS1: http://doroui
+  CORSGATEWAY: http://gateway:8765
+  GAPPPASS: GAPPPASSPLACEHOLDER
+  GADD: GADDPLACEHOLDER
+  EUREKA_INSTANCE_PREFERIPADDRESS: "true"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service.simple-ns:8761/eureka/
