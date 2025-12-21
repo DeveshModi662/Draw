@@ -1,0 +1,11 @@
+# k8s/config/gateway-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  APPNAMEGATEWAY: gatewayservice
+  PORTGATEWAY: "8765"
+  EUREKA_INSTANCE_PREFERIPADDRESS: "true"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service.simple-ns:8761/eureka/
+  CORSURLGATEWAY: http://localhost:30080

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dorobe-deployment
+  labels:
+    app: doro
+    microservice : dorobe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doro
+      microservice : dorobe
+  template:
+    metadata:
+      labels:
+        app: doro
+        microservice : dorobe
+    spec:
+      containers:
+      - name: dorobe-container
+        image: deveshmodi662/dorobe-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        envFrom : 
+          - configMapRef:
+              name: dorobe-config

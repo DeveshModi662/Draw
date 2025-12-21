@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+- ../../config
+- ../../services
+
+patches:
+- path: collab-configmap-patch.yaml
+- path: dorobe-configmap-patch.yaml
+- path: export-configmap-patch.yaml
+- path: gateway-configmap-patch.yaml
+
+namePrefix: ${BRANCH_NAME}- 
+images:
+- name: deveshmodi662/serviceregistry-app
+  newTag: ${BRANCH_NAME}
+- name: deveshmodi662/gatewayservice-app
+  newTag: ${BRANCH_NAME}
+- name: deveshmodi662/dorobe-app
+  newTag: ${BRANCH_NAME}
+- name: deveshmodi662/exportservice-app
+  newTag: ${BRANCH_NAME}
+- name: deveshmodi662/collabservice-app
+  newTag: ${BRANCH_NAME}
+- name: deveshmodi662/doroui-app
+  newTag: ${BRANCH_NAME}
