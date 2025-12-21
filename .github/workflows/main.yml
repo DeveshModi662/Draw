@@ -101,11 +101,61 @@ jobs:
       - name: Kubectl 1
         run: |
           cd k8s
-          echo "Branch : ${{github.ref_name}}"
           $env:BRANCH_NAME="${{github.ref_name}}"
+          $env:DBURI="${{secrets.DBURI}}"
+          $env:DBURIEXPORT="${{secrets.DBURIEXPORT}}"
+          $env:GADD="${{secrets.GADD}}"
+          $env:GADDPASS="${{secrets.GADDPASS}}"
+
+          echo $env:BRANCH_NAME $env:DBURI $env:DBURIEXPORT $env:GADD $env:GADDPASS
+
+          @" 
+          apiVersion: v1 
+          kind: ConfigMap 
+          metadata: 
+            name: gateway-config 
+          data: 
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://$($env:BRANCH_NAME)-eureka-service.$($env:BRANCH_NAME):8761/eureka/ 
+            CORSURLGATEWAY: http://localhost:30080
+          "@ | Out-File overlays/dev/gateway-configmap-patch.yaml -Encoding ascii
+
+          @" 
+          apiVersion: v1 
+          kind: ConfigMap 
+          metadata: 
+            name: export-config 
+          data: 
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://$($env:BRANCH_NAME)-eureka-service.$($env:BRANCH_NAME):8761/eureka/ 
+            DBURIEXPORT: $($env:DBURIEXPORT)
+            CORSURLGATEWAY: http://localhost:30080
+          "@ | Out-File overlays/dev/export-configmap-patch.yaml -Encoding ascii
+
+          @" 
+          apiVersion: v1 
+          kind: ConfigMap 
+          metadata: 
+            name: dorobe-config 
+          data: 
+            DBURI: $($env:DBURI)
+            GAPPPASS: $($env:GAPPPASS)
+            GADD: $($env:GAPPPASS)
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://$($env:BRANCH_NAME)-eureka-service.$($env:BRANCH_NAME):8761/eureka/ 
+            CORSURLGATEWAY: http://localhost:30080
+          "@ | Out-File overlays/dev/dorobe-configmap-patch.yaml -Encoding ascii
+
+          @" 
+          apiVersion: v1 
+          kind: ConfigMap 
+          metadata: 
+            name: collab-config 
+          data: 
+            CORSURL1WS: http://localhost:30080
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://$($env:BRANCH_NAME)-eureka-service.$($env:BRANCH_NAME):8761/eureka/ 
+            CORSURLGATEWAY: http://localhost:30080
+          "@ | Out-File overlays/dev/collab-configmap-patch.yaml -Encoding ascii
 
           kubectl create namespace $env:BRANCH_NAME
-          kubectl config set-context --current --namespace=$env:BRANCH_NAME
+          kubectl config set-context --current --namespace=$env:BRANCH_NAME          
           
           echo $env:BRANCH_NAME ; kubectl kustomize overlays/dev | envsubst | kubectl apply -n $env:BRANCH_NAME -f -
           
