@@ -17,7 +17,7 @@ For users :
 9. Export the drawing to PNG
 
 App : https://mellifluous-pastelito-8bd691.netlify.app/
-* Possible points of failure: Please let me know if...
+* __Possible points of failure: Please let me know if...__
   * Signup/OTP not working - Google App Password/sendgrid expired
   * Taking too long to launch - server on sleep due to inactivity
   * Login failing - MongoDB password may have expired
