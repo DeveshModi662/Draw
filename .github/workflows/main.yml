@@ -13,8 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove old images
+      - name: Docker login Remove old images
         run: |
+          docker login
+          $env:DOCKER_BUILDKIT=0
           # $ErrorActionPreference = "SilentlyContinue"
           
           # $images = @(
@@ -38,68 +40,83 @@ jobs:
 
         
       # 7. (Optional) Print build artifacts
-      - name: Build and push images
+      # - name: Build and push images DOROBE 
+      #   run: |
+      #     # docker rmi `
+      #     #   deveshmodi662/${{github.ref_name}}-dorobe-app:v1 `
+      #     #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 `
+      #     #   deveshmodi662/${{github.ref_name}}-collabservice-app:v1 `
+      #     #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 `
+      #     #   deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 `
+      #     #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 `
+      #     #   deveshmodi662/${{github.ref_name}}-doroui-app:v1 `
+      #     #   || true
+          
+      #     echo "Branch : ${{github.ref_name}}"
+      #     cd dorobe
+      #     docker build --no-cache -t deveshmodi662/dorobe-app:${{github.ref_name}} .
+      #     docker push deveshmodi662/dorobe-app:${{github.ref_name}}
+      #     cd ..
+          
+      # - name: Build and push images EXPORT
+      #   run: |          
+      #     cd exportservice
+      #     docker build --no-cache -t deveshmodi662/exportservice-app:${{github.ref_name}} .
+      #     docker push deveshmodi662/exportservice-app:${{github.ref_name}}
+      #     cd ..
+          
+      # - name: Build and push images COLLAB
+      #   run: |          
+      #     cd collabservice
+      #     docker build --no-cache -t deveshmodi662/collabservice-app:${{github.ref_name}} .
+      #     docker push deveshmodi662/collabservice-app:${{github.ref_name}}
+      #     cd ..
+          
+      # - name: Build and push images GATEWAY
+      #   run: |
+      #     cd gatewayservice
+      #     docker build --no-cache -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
+      #     docker push deveshmodi662/gatewayservice-app:${{github.ref_name}}
+      #     cd ..
+          
+      # - name: Build and push images EUREKA
+      #   run: |        
+      #     cd serviceregistry
+      #     docker build --no-cache -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
+      #     docker push deveshmodi662/serviceregistry-app:${{github.ref_name}}
+      #     cd ..
+          
+      # - name: Build and push images DORUI
+      #   run: |          
+      #     cd doroui          
+      #     # Create .env file REQUIRED at build time
+      #     # echo "REACT_APP_GATEWAY_BASE=http://localhost:30765
+      #     # REACT_APP_DOROBE_SERVICE=dorobe
+      #     # REACT_APP_BASE_API_URL=http://dorobe:8000
+      #     # REACT_APP_BASE_API_DELETEME=http://dorobe:8000
+      #     # REACT_APP_EXPORT_SERVICE=exportservice
+      #     # REACT_APP_EXPORT_API_URL=http://exportservice:8080
+      #     # REACT_APP_COLLAB_SERVICE=collabservice
+      #     # REACT_APP_COLLAB_API_URL=http://localhost:30888" > .env
+          
+      #     # @"
+      #     # REACT_APP_GATEWAY_BASE=http://localhost:30765
+      #     # REACT_APP_DOROBE_SERVICE=dorobe
+      #     # REACT_APP_BASE_API_URL=http://dorobe:8000
+      #     # REACT_APP_BASE_API_DELETEME=http://dorobe:8000
+      #     # REACT_APP_EXPORT_SERVICE=exportservice
+      #     # REACT_APP_EXPORT_API_URL=http://exportservice:8080
+      #     # REACT_APP_COLLAB_SERVICE=collabservice
+      #     # REACT_APP_COLLAB_API_URL=http://localhost:30888
+      #     # "@ | Set-Content doroui/.env -Encoding utf8
+          
+      #     docker build --no-cache -t deveshmodi662/doroui-app:${{github.ref_name}} .
+      #     docker push deveshmodi662/doroui-app:${{github.ref_name}}
+      #     cd ..
+          
+      - name: Kubectl 1 Set secrets and variables
         run: |
-          # docker rmi `
-          #   deveshmodi662/${{github.ref_name}}-dorobe-app:v1 `
-          #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 `
-          #   deveshmodi662/${{github.ref_name}}-collabservice-app:v1 `
-          #   deveshmodi662/${{github.ref_name}}-exportservice-app:v1 `
-          #   deveshmodi662/${{github.ref_name}}-gatewayservice-app:v1 `
-          #   deveshmodi662/${{github.ref_name}}-serviceregistry-app:v1 `
-          #   deveshmodi662/${{github.ref_name}}-doroui-app:v1 `
-          #   || true
-          
-          echo "Branch : ${{github.ref_name}}"
-          cd dorobe
-          docker build --no-cache -t deveshmodi662/dorobe-app:${{github.ref_name}} .
-          docker push deveshmodi662/dorobe-app:${{github.ref_name}}
-          cd ..
-          cd exportservice
-          docker build --no-cache -t deveshmodi662/exportservice-app:${{github.ref_name}} .
-          docker push deveshmodi662/exportservice-app:${{github.ref_name}}
-          cd ..
-          cd collabservice
-          docker build --no-cache -t deveshmodi662/collabservice-app:${{github.ref_name}} .
-          docker push deveshmodi662/collabservice-app:${{github.ref_name}}
-          cd ..
-          cd gatewayservice
-          docker build --no-cache -t deveshmodi662/gatewayservice-app:${{github.ref_name}} .
-          docker push deveshmodi662/gatewayservice-app:${{github.ref_name}}
-          cd ..
-          cd serviceregistry
-          docker build --no-cache -t deveshmodi662/serviceregistry-app:${{github.ref_name}} .
-          docker push deveshmodi662/serviceregistry-app:${{github.ref_name}}
-          cd ..
-          cd doroui
-          
-          # Create .env file REQUIRED at build time
-          # echo "REACT_APP_GATEWAY_BASE=http://localhost:30765
-          # REACT_APP_DOROBE_SERVICE=dorobe
-          # REACT_APP_BASE_API_URL=http://dorobe:8000
-          # REACT_APP_BASE_API_DELETEME=http://dorobe:8000
-          # REACT_APP_EXPORT_SERVICE=exportservice
-          # REACT_APP_EXPORT_API_URL=http://exportservice:8080
-          # REACT_APP_COLLAB_SERVICE=collabservice
-          # REACT_APP_COLLAB_API_URL=http://localhost:30888" > .env
-          
-          # @"
-          # REACT_APP_GATEWAY_BASE=http://localhost:30765
-          # REACT_APP_DOROBE_SERVICE=dorobe
-          # REACT_APP_BASE_API_URL=http://dorobe:8000
-          # REACT_APP_BASE_API_DELETEME=http://dorobe:8000
-          # REACT_APP_EXPORT_SERVICE=exportservice
-          # REACT_APP_EXPORT_API_URL=http://exportservice:8080
-          # REACT_APP_COLLAB_SERVICE=collabservice
-          # REACT_APP_COLLAB_API_URL=http://localhost:30888
-          # "@ | Set-Content doroui/.env -Encoding utf8
-          
-          docker build --no-cache -t deveshmodi662/doroui-app:${{github.ref_name}} .
-          docker push deveshmodi662/doroui-app:${{github.ref_name}}
-          cd ..
-          
-      - name: Kubectl 1
-        run: |
+          ls -Name
           cd k8s
           $env:BRANCH_NAME="${{github.ref_name}}"
           $env:DBURI="${{secrets.DBURI}}"
@@ -107,8 +124,8 @@ jobs:
           $env:GADD="${{secrets.GADD}}"
           $env:GADDPASS="${{secrets.GADDPASS}}"
 
-          echo $env:BRANCH_NAME $env:DBURI $env:DBURIEXPORT $env:GADD $env:GADDPASS
-
+          echo $env:BRANCH_NAME $env:DBURI $env:DBURIEXPORT $env:GADD $env:GADDPASS   
+          
           @" 
           apiVersion: v1 
           kind: ConfigMap 
@@ -153,7 +170,7 @@ jobs:
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://$($env:BRANCH_NAME)-eureka-service.$($env:BRANCH_NAME):8761/eureka/ 
             CORSURLGATEWAY: http://localhost:30080
           "@ | Out-File overlays/dev/collab-configmap-patch.yaml -Encoding ascii
-
+          
           kubectl create namespace $env:BRANCH_NAME
           kubectl config set-context --current --namespace=$env:BRANCH_NAME          
           
