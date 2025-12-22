@@ -9,7 +9,7 @@ For dev :
 
 __Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kubernetes(Cluster, node, namespaces, POD, Deployment, Replica set, ClusterIP service, NodePort service, configmap, Kustomization, Ingress)__
 
-<img width="830" height="449" alt="DrawWithJobWithDeleteArrow" src="https://github.com/user-attachments/assets/01a61d8e-7cb3-4e89-ab21-48c4038ea52a" />
+<img width="830" height="449" alt="DrawWithJobWithDeleteArrowWithServiceAcct" src="https://github.com/user-attachments/assets/9b23753d-3871-46fc-9e2f-2a0b4274fe0e" />
 
 For users : 
 1. Sign up and OTP authentication
