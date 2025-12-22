@@ -2,7 +2,7 @@
 
 For dev : 
 1. Dockerised microservices
-2. CI builds immutable Docker images and deploys automatically out of dev branch using Github actions self hosted runner
+2. Builds immutable Docker images out of dev branch and deploys using Github actions self hosted runner on push
 3. Auto patch the changes to test on Kubernetes' Kind cluster
 4. No downtime on dev env while patching because of deployment and replica set
 5. K8S job to delete the branch namespace after 5 min
