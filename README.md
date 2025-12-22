@@ -2,10 +2,14 @@
 
 For dev : 
 1. Dockerised microservices
-2. Build the image on pushing changes to dev branch using Github actions self hosted runner
-3. Auto patch the changes to test using Kubernetes' Kind cluster
+2. CI builds immutable Docker images and deploys automatically out of dev branch using Github actions self hosted runner
+3. Auto patch the changes to test on Kubernetes' Kind cluster
+4. No downtime on dev env while patching because of deployment and replica set
 
-__Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kubernetes(Cluster, node, namespaces, POD, Deployment, ClusterIP service, NodePort service, configmap, Kustomization, Ingress)__
+__Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kubernetes(Cluster, node, namespaces, POD, Deployment, Replica set, ClusterIP service, NodePort service, configmap, Kustomization, Ingress)__
+
+<img width="830" height="449" alt="Draw" src="https://github.com/user-attachments/assets/7ba9f6d6-9e6a-4a9b-88fb-554d37ecab0b" />
+
 
 For users : 
 1. Sign up and OTP authentication
