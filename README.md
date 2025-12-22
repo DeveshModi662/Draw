@@ -5,6 +5,7 @@ For dev :
 2. CI builds immutable Docker images and deploys automatically out of dev branch using Github actions self hosted runner
 3. Auto patch the changes to test on Kubernetes' Kind cluster
 4. No downtime on dev env while patching because of deployment and replica set
+5. K8S job to delete the branch namespace after 5 min
 
 __Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kubernetes(Cluster, node, namespaces, POD, Deployment, Replica set, ClusterIP service, NodePort service, configmap, Kustomization, Ingress)__
 
