@@ -175,5 +175,10 @@ jobs:
           kubectl config set-context --current --namespace=$env:BRANCH_NAME          
           
           echo $env:BRANCH_NAME ; kubectl kustomize overlays/dev | envsubst | kubectl apply -n $env:BRANCH_NAME -f -
+
+          kubectl apply -f cleanup/serviceaccount.yaml
+          kubectl apply -f cleanup/clusterrole.yaml
+          kubectl apply -f cleanup/clusterrolebinding.yaml
+          cat cleanup/job.yaml | envsubst | kubectl apply -f -
           
           
