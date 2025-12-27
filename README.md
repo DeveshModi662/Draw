@@ -6,6 +6,7 @@ For dev :
 3. Auto patch the changes to test on Kubernetes' Kind cluster
 4. No downtime on dev env while patching because of deployment and replica set
 5. K8S job to delete the branch namespace after 5 min
+6. [Babygrok](https://github.com/DeveshModi662/babygrok/blob/main/README.md)-CLI tool to create an index on the code and search on it
 
 __Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kubernetes(Cluster, node, namespaces, POD, Deployment, Replica set, ClusterIP service, NodePort service, configmap, Kustomization, Ingress)__
 
