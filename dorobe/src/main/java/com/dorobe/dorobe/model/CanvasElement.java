@@ -15,7 +15,7 @@ public class CanvasElement {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id; // MongoDB _id
 
-    private int eleId;
+    private String eleId;
 
     // Just store the canvas id, no DBRef needed
     @JsonSerialize(using = ToStringSerializer.class)
@@ -40,11 +40,11 @@ public class CanvasElement {
         this.id = id;
     }
 
-    public int getEleId() {
+    public String getEleId() {
         return eleId;
     }
 
-    public void setEleId(int eleId) {
+    public void setEleId(String eleId) {
         this.eleId = eleId;
     }
 
