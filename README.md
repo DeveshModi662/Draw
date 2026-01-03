@@ -26,14 +26,11 @@ __Java, Sprinboot, ReactJS, MongoDB, Docker, Github actions, Websockets, Kuberne
 App : https://mellifluous-pastelito-8bd691.netlify.app/
 ### Possible points of failure: Please let me know if...
  * Signup/OTP not working - Google App Password/sendgrid expired
- * Taking too long to launch - server on sleep due to inactivity
+ * Taking too long to launch - server on sleep due to inactivity-wait
  * Login failing - MongoDB password may have expired
- * OTP taking too long - try again later
+ * OTP taking too long - wait
 
 
 ### Concurrency analysis
-* It is append-only.
-* No merges.
-* Centralized event trigered collaboration only.
-* No conflicts
-* Check [issue-advanced-enh-add delete/resize shape feature](https://github.com/DeveshModi662/Draw/issues/19).
+* Edits needs to be handled by atmoic upsert.
+* or check [issue-advanced-enh-add delete/resize shape feature](https://github.com/DeveshModi662/Draw/issues/19).
