@@ -11,5 +11,6 @@ import java.util.Optional;
 
 public interface CanvasElementRepository extends MongoRepository<CanvasElement, ObjectId> {
     Optional<List<CanvasElement>> findByCanvasId(ObjectId canvasId) ;
-    void deleteAllByCanvasId(ObjectId canvasId) ;
+    void deleteAllByCanvasId(ObjectId canvasId) ;    
+    Optional<List<CanvasElement>> findByEleId(String eleId) ;
 }

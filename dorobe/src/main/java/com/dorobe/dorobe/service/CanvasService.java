@@ -149,6 +149,7 @@ public class CanvasService {
         return (drawRepo.findByCanvasId(canvasId).isPresent() ? (List<CanvasElement>)drawRepo.findByCanvasId(canvasId).get() : new ArrayList<CanvasElement>()) ;
     }
 
+    // @Transactional
     public List<CanvasElement> updateDrawing(String loggedInUsername, ObjectId canvasId, List<CanvasElement> delta) {
         int i = 0 ;
         System.out.println("dk-CanvasService-updateDrawing-"+(++i));
@@ -169,15 +170,24 @@ public class CanvasService {
         }
         System.out.println("dk-CanvasService-updateDrawing-"+(++i));
         for(CanvasElement canvasElement : delta) {
+            // System.out.println("dk-canvasElement.getEleId()-"+canvasElement.getEleId());
+            if(canvasElement.getEleId() != null) {
+                // System.out.println("dk-deleteelement-1-"+canvasElement.getEleId()) ;
+                if(drawRepo.findByEleId(canvasElement.getEleId()).isPresent() && (drawRepo.findByEleId(canvasElement.getEleId()).get()).size() > 0) {
+                    // System.out.println("dk-deleteelement-2-"+drawRepo.findByEleId(canvasElement.getEleId()).get().getEleId());
+                    drawRepo.deleteAll(drawRepo.findByEleId(canvasElement.getEleId()).get()) ;
+                }
+                // System.out.println("Deleted-"+ canvasElement.getEleId());
+            }
             canvasElement.setCanvasId(canvasId);
         }        
         System.out.println("dk-CanvasService-updateDrawing-"+(++i));
-        drawRepo.saveAll(delta) ;
+        List<CanvasElement> result = drawRepo.saveAll(delta) ;
         System.out.println("dk-CanvasService-updateDrawing-"+(++i));
-        return null ;
+        return result ;
     }
 
-    public void clearDrawing(String loggedInUsername, ObjectId canvasId) {
+   public void clearDrawing(String loggedInUsername, ObjectId canvasId) {
         System.out.println("CanvasService-clearDrawing-1");
         if(!((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getUsername().equals(loggedInUsername)) {
             throw new RuntimeException("User not authorised") ;
