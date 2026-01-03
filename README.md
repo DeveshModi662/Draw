@@ -33,5 +33,6 @@ App : https://mellifluous-pastelito-8bd691.netlify.app/
 
 ### Concurrency analysis
 * Edits needs to be handled by atmoic upsert.
-* Conflict resolution is deterministic and server-ordered based on race situation.
+* Conflict resolution is deterministic and server-ordered based on racing.
+* Client → Server → Order → Persist → Broadcast
 * or check [issue-advanced-enh-add delete/resize shape feature](https://github.com/DeveshModi662/Draw/issues/19).
